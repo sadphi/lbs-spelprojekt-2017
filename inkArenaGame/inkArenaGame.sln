@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "inkArenaGame", "inkArenaGame\inkArenaGame\inkArenaGame.csproj", "{0510AB71-BA9D-492F-BEBB-B1BCABD6B9A8}"
+EndProject
+Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "inkArenaGameContent", "inkArenaGame\inkArenaGameContent\inkArenaGameContent.contentproj", "{A0BC2DCC-3C71-496C-93A9-B25A900AD501}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0510AB71-BA9D-492F-BEBB-B1BCABD6B9A8}.Debug|x86.ActiveCfg = Debug|x86
+		{0510AB71-BA9D-492F-BEBB-B1BCABD6B9A8}.Debug|x86.Build.0 = Debug|x86
+		{0510AB71-BA9D-492F-BEBB-B1BCABD6B9A8}.Release|x86.ActiveCfg = Release|x86
+		{0510AB71-BA9D-492F-BEBB-B1BCABD6B9A8}.Release|x86.Build.0 = Release|x86
+		{A0BC2DCC-3C71-496C-93A9-B25A900AD501}.Debug|x86.ActiveCfg = Debug|x86
+		{A0BC2DCC-3C71-496C-93A9-B25A900AD501}.Release|x86.ActiveCfg = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
