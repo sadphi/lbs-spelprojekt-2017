@@ -18,6 +18,7 @@ namespace inkArenaGame
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Texture2D player;
 
         public Game1()
         {
@@ -34,6 +35,11 @@ namespace inkArenaGame
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            graphics.PreferredBackBufferWidth = 1920;
+            graphics.PreferredBackBufferHeight = 1056;
+            graphics.IsFullScreen = true;
+            graphics.PreferMultiSampling = true;
+            graphics.ApplyChanges();
 
             base.Initialize();
         }
@@ -48,6 +54,7 @@ namespace inkArenaGame
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            player = Content.Load<Texture2D>("Graphics/Player1Standing");
         }
 
         /// <summary>
@@ -67,7 +74,7 @@ namespace inkArenaGame
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 this.Exit();
 
             // TODO: Add your update logic here
@@ -84,6 +91,9 @@ namespace inkArenaGame
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            spriteBatch.Begin();
+            spriteBatch.Draw(player, new Vector2(0, 0), Color.White);
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
