@@ -70,7 +70,7 @@ namespace inkArenaGame
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            player = Content.Load<Texture2D>("Graphics/Player1Standing");
+            player = Content.Load<Texture2D>("Graphics/Players/Player1Standing");
         }
 
         /// <summary>
