@@ -37,6 +37,8 @@ namespace inkArenaGame
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            this.Window.Title = "A game by Inkognito";
+
             graphics.PreferredBackBufferWidth = 1920;
             graphics.PreferredBackBufferHeight = 1056;
             graphics.IsFullScreen = false;
