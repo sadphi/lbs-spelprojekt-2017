@@ -19,6 +19,15 @@ namespace inkArenaGame
         private float deAcc = 0.8f;
         private const float GRAVITY = 0.5f;
 
+        private bool grounded = false;
+
+        enum State
+        {
+            standing,
+            walking,
+            jumping
+        }
+
         public Player(PlayerIndex playerIndex)
         {
             index = playerIndex;
@@ -37,7 +46,7 @@ namespace inkArenaGame
             if (dir != 0)
             {
                 velocity.X += dir * acc;
-                velocity.X = MathHelper.Clamp(velocity.X, -4, 4);
+                velocity.X = MathHelper.Clamp(velocity.X, -8, 8);
             }
             else
             {

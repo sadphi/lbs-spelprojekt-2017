@@ -18,6 +18,8 @@ namespace inkArenaGame
     {
         GraphicsDeviceManager graphics;
         public static SpriteBatch spriteBatch;
+        public static Texture2D pixel;
+        public static ContentManager contentLoader;
 
         List<Player> players;
         List<Bullet> bullets;
@@ -39,14 +41,16 @@ namespace inkArenaGame
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-            this.Window.Title = "A game by Inkognito";
+            contentLoader = Content;
 
-            graphics.PreferredBackBufferWidth = 1920;
-            graphics.PreferredBackBufferHeight = 1056;
-            graphics.IsFullScreen = false;
-            graphics.PreferMultiSampling = true;
-            graphics.ApplyChanges();
+            this.Window.Title = "A game by Inkognito";
+            this.IsMouseVisible = true;
+
+            this.graphics.PreferredBackBufferWidth = 1920;
+            this.graphics.PreferredBackBufferHeight = 1056;
+            this.graphics.IsFullScreen = false;
+            this.graphics.PreferMultiSampling = true;
+            this.graphics.ApplyChanges();
 
             players = new List<Player>();
             bullets = new List<Bullet>();
@@ -59,7 +63,6 @@ namespace inkArenaGame
                 }
             }
 
-            bullets.Add(new Bullet(Vector2.One * 100, Vector2.One*5));
 
             base.Initialize();
         }
@@ -73,6 +76,10 @@ namespace inkArenaGame
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+
+            pixel = new Texture2D(GraphicsDevice, 1, 1);
+            pixel.SetData(new Color[] { Color.White });
+            
             // TODO: use this.Content to load your game content here
             playerTexture = Content.Load<Texture2D>("Graphics/Players/Player1Standing");
             bulletTexture = Content.Load<Texture2D>("Graphics/PortalProjectile1");
