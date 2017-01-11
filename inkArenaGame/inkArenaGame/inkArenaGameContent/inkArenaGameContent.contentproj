@@ -33,26 +33,36 @@
     <Folder Include="Sounds\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Graphics\Player1Standing.png">
+    <Compile Include="Graphics\Players\Player1Standing.png">
       <Name>Player1Standing</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Graphics\GunProjectile1.png">
+      <Name>GunProjectile1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphics\PortalProjectile1.png">
+      <Name>PortalProjectile1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
     <Content Include="Levels\level1.txt">
       <Name>level1</Name>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Graphics\Player1Run.png">
+    <Compile Include="Graphics\Players\Player1Run.png">
       <Name>Player1Run</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Graphics\PlayerArm.png">
+    <Compile Include="Graphics\Players\PlayerArm.png">
       <Name>PlayerArm</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>

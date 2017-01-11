@@ -48,6 +48,7 @@ namespace inkArenaGame
             graphics.ApplyChanges();
 
             players = new List<Player>();
+            bullets = new List<Bullet>();
 
             for (int i = 0; i < 4; i++)
             {
