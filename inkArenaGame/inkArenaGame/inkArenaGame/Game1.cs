@@ -18,11 +18,12 @@ namespace inkArenaGame
     {
         GraphicsDeviceManager graphics;
         public static SpriteBatch spriteBatch;
-        Texture2D player;
 
         List<Player> players;
         List<Bullet> bullets;
+
         Texture2D bulletTexture;
+        Texture2D playerTexture;
 
         public Game1()
         {
@@ -73,7 +74,7 @@ namespace inkArenaGame
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            player = Content.Load<Texture2D>("Graphics/Players/Player1Standing");
+            playerTexture = Content.Load<Texture2D>("Graphics/Players/Player1Standing");
             bulletTexture = Content.Load<Texture2D>("Graphics/PortalProjectile1");
         }
 
@@ -95,9 +96,10 @@ namespace inkArenaGame
         {
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                this.Exit();
+                Exit();
 
-
+            foreach (Player p in players)
+                p.Update();
 
             foreach (Bullet b in bullets)
                 b.Update();
@@ -115,7 +117,13 @@ namespace inkArenaGame
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
-            spriteBatch.Draw(player, new Vector2(0, 0), Color.White);
+            spriteBatch.Draw(playerTexture, new Vector2(0, 0), Color.White);
+
+            foreach (Player p in players)
+            {
+                p.Draw(playerTexture);
+            }
+
             foreach (Bullet b in bullets)
             {
                 b.Draw(bulletTexture);
