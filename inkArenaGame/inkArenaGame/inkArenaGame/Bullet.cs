@@ -27,9 +27,9 @@ namespace inkArenaGame
             position += velocity;
         }
 
-        public void Draw()
+        public void Draw(Texture2D bullet)
         {
-
+            Game1.spriteBatch.Draw(bullet, position, null, Color.White, MathHelper.ToRadians((float)Math.Atan2(velocity.Y, velocity.X)), Vector2.One / 2.0f, Vector2.One, SpriteEffects.None, 0);
         }
     }
 }

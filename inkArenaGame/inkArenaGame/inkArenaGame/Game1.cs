@@ -17,10 +17,12 @@ namespace inkArenaGame
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        public static SpriteBatch spriteBatch;
         Texture2D player;
 
         List<Player> players;
+        List<Bullet> bullets;
+        Texture2D bulletTexture;
 
         public Game1()
         {
@@ -107,6 +109,11 @@ namespace inkArenaGame
             // TODO: Add your drawing code here
             spriteBatch.Begin();
             spriteBatch.Draw(player, new Vector2(0, 0), Color.White);
+            foreach (Bullet b in bullets)
+            {
+                b.Draw(bulletTexture);
+            }
+
             spriteBatch.End();
 
             base.Draw(gameTime);
