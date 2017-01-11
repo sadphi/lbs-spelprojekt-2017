@@ -58,6 +58,8 @@ namespace inkArenaGame
                 }
             }
 
+            bullets.Add(new Bullet(Vector2.One * 100, Vector2.One*5));
+
             base.Initialize();
         }
 
@@ -72,6 +74,7 @@ namespace inkArenaGame
 
             // TODO: use this.Content to load your game content here
             player = Content.Load<Texture2D>("Graphics/Players/Player1Standing");
+            bulletTexture = Content.Load<Texture2D>("Graphics/PortalProjectile1");
         }
 
         /// <summary>
@@ -94,7 +97,10 @@ namespace inkArenaGame
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 this.Exit();
 
-            // TODO: Add your update logic here
+
+
+            foreach (Bullet b in bullets)
+                b.Update();
 
             base.Update(gameTime);
         }
@@ -105,7 +111,7 @@ namespace inkArenaGame
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
