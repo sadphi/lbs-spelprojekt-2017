@@ -39,7 +39,7 @@ namespace inkArenaGame
             // TODO: Add your initialization logic here
             graphics.PreferredBackBufferWidth = 1920;
             graphics.PreferredBackBufferHeight = 1056;
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = false;
             graphics.PreferMultiSampling = true;
             graphics.ApplyChanges();
 
