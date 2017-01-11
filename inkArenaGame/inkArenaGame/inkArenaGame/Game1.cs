@@ -20,6 +20,8 @@ namespace inkArenaGame
         SpriteBatch spriteBatch;
         Texture2D player;
 
+        List<Player> players;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -40,6 +42,16 @@ namespace inkArenaGame
             graphics.IsFullScreen = true;
             graphics.PreferMultiSampling = true;
             graphics.ApplyChanges();
+
+            players = new List<Player>();
+
+            for (int i = 0; i < 4; i++)
+            {
+                if (GamePad.GetState((PlayerIndex)i).IsConnected)
+                {
+                    players.Add(new Player((PlayerIndex)i));
+                }
+            }
 
             base.Initialize();
         }
