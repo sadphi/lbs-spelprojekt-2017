@@ -27,6 +27,8 @@ namespace inkArenaGame
         Texture2D bulletTexture;
         Texture2D playerTexture;
 
+        Map map;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -63,6 +65,7 @@ namespace inkArenaGame
                 }
             }
 
+            map = new Map();
 
             base.Initialize();
         }
@@ -125,7 +128,7 @@ namespace inkArenaGame
             // TODO: Add your drawing code here
             spriteBatch.Begin();
             spriteBatch.Draw(playerTexture, new Vector2(0, 0), Color.White);
-
+            map.Draw();
             foreach (Player p in players)
             {
                 p.Draw(playerTexture);
