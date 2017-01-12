@@ -24,9 +24,9 @@ namespace inkArenaGame
         List<Player> players;
 
         Texture2D bulletTexture;
-
         Texture2D playerTexture;
         Texture2D menuTexture;
+        Texture2D credits;
 
         GamePadState newGamePadState;
         GamePadState oldGamePadState;
@@ -44,6 +44,7 @@ namespace inkArenaGame
         enum GameState
         {
             MainMenu,
+            LevelSelect,
             Credits,
             Playing,
             Paused,
@@ -94,7 +95,7 @@ namespace inkArenaGame
             currentButton = 0;
 
             btnArray = new Button[3];
-            btnArray[0] = new Button(960, 350, Content.Load<Texture2D>("Graphics/Buttons/Playbutton"), () => { gameState = GameState.Playing; });
+            btnArray[0] = new Button(960, 350, Content.Load<Texture2D>("Graphics/Buttons/Playbutton"), () => { gameState = GameState.LevelSelect; });
             btnArray[1] = new Button(960, 550, Content.Load<Texture2D>("Graphics/Buttons/Creditsbutton"), () => { gameState = GameState.Credits; });
             btnArray[2] = new Button(960, 750, Content.Load<Texture2D>("Graphics/Buttons/Quitbutton"), () => { Environment.Exit(0); });
 
@@ -117,6 +118,7 @@ namespace inkArenaGame
             playerTexture = Content.Load<Texture2D>("Graphics/Players/Player1Standing");
             menuTexture = Content.Load<Texture2D>("Graphics/Menu2");
             bulletTexture = Content.Load<Texture2D>("Graphics/GunProjectile1");
+            credits = Content.Load<Texture2D>("Graphics/credits");
         }
 
         /// <summary>
@@ -232,6 +234,7 @@ namespace inkArenaGame
 
                     break;
                 case GameState.Credits:
+                    spriteBatch.Draw(credits, new Vector2(0, 0), Color.White);
                     break;
                 case GameState.Playing:
                     spriteBatch.Draw(playerTexture, new Vector2(0, 0), Color.White);
