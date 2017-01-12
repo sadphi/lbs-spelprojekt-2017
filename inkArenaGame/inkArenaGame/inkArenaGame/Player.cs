@@ -8,6 +8,7 @@ namespace inkArenaGame
 {
     class Player
     {
+        Vector2 spawnPos;
         Vector2 position;
         Vector2 velocity;
 
@@ -50,9 +51,20 @@ namespace inkArenaGame
         {
             index = playerIndex;
             position = new Vector2(nx, 200);
+            spawnPos = position;
             velocity = new Vector2(0, 0);
 
             LoadContent();
+        }
+
+        public void Respawn()
+        {
+            position = spawnPos;
+            velocity = Vector2.Zero;
+            state = State.standing;
+            grounded = false;
+            frameClock = 0;
+            currentFrame = 0;
         }
 
         private void LoadContent()
@@ -67,7 +79,7 @@ namespace inkArenaGame
             }
         }
 
-        public void Update()
+        public void Update(ref bool hit)
         {
             newstate = GamePad.GetState(index, GamePadDeadZone.Circular);
 
@@ -169,15 +181,12 @@ namespace inkArenaGame
 
             #region Shooting
 
-            if (ButtonHit(Buttons.X))
-            {
-                velocity = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle)) * 32;
-            }
-
             if (ButtonHit(Buttons.RightShoulder))
                 Bullet.Spawn(index, new Vector2(position.X + 7 + (flipFrame ? 18 : 0), position.Y + 15) + new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle)) * arm.Width, new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle)) * 10);
 
             #endregion
+
+            #region Coll With Bullets
 
             foreach (Bullet b in Bullet.All)
             {
@@ -185,15 +194,14 @@ namespace inkArenaGame
                 {
                     if (Collision(position.X, position.Y, b.position.X, b.position.Y, WIDTH, HEIGHT, 1, 1))
                     {
-
-                        while (true)
-                        {
-
-                        }
                         lives -= 1;
+                        hit = true;
+                        break;
                     }
                 }
             }
+
+            #endregion
 
             oldstate = newstate;
         }

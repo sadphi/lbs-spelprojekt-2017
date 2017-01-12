@@ -35,8 +35,11 @@ namespace inkArenaGame
 
             for (int i = 0; i < length; i++)
             {
-                if (Map.CurrentIndex((int)Math.Floor((position.X) / 32), (int)Math.Floor((position.Y) / 32)) == 1)
+                int tx = (int)Math.Floor((position.X) / 32);
+                int ty = (int)Math.Floor((position.Y) / 32);
+                if (Map.CurrentIndex(tx, ty) == 1)
                 {
+                    Particle.Spawn(position, 0);
                     Bullet.All.Remove(this);
                 }
 

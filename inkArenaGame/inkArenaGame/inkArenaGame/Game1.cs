@@ -87,6 +87,8 @@ namespace inkArenaGame
                 }
             }
 
+            players.Add(new Player((PlayerIndex)2, 980));
+
             map = new Map();
 
             currentButton = 0;
@@ -174,11 +176,23 @@ namespace inkArenaGame
                 case GameState.Credits:
                     break;
                 case GameState.Playing:
-                    foreach (Player p in players)
-                        p.Update();
+                    bool hit = false;
 
                     foreach (Bullet b in Bullet.All.ToArray())
                         b.Update();
+
+                    foreach (Player p in players)
+                        p.Update(ref hit);
+
+                    if (hit)
+                    {
+                        Bullet.All.Clear();
+                        foreach (Player p in players)
+                        {
+                            p.Respawn();
+                        }
+                    }
+                    
                     break;
                 case GameState.Paused:
                     break;
@@ -231,6 +245,8 @@ namespace inkArenaGame
                     {
                         b.Draw(bulletTexture);
                     }
+
+                    Particle.DrawAll();
                     break;
                 case GameState.Paused:
                     break;

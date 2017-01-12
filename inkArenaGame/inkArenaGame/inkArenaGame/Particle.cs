@@ -17,14 +17,15 @@ namespace inkArenaGame
 
         Vector2 position;
         float frameTime;
-        int angle;
+        float angle;
 
         static Texture2D texture = Game1.contentLoader.Load<Texture2D>("Graphics/GunImpact1");
 
-        public Particle(Vector2 newPos)
+        public Particle(Vector2 newPos, float newAng)
         {
             position = newPos;
             frameTime = 0;
+            angle = newAng;
             All.Add(this);
         }
 
@@ -44,9 +45,9 @@ namespace inkArenaGame
                 All.Remove(this);
         }
 
-        public static void Spawn(Vector2 newPos)
+        public static void Spawn(Vector2 newPos, float newAng)
         {
-            All.Add(new Particle(newPos));
+            All.Add(new Particle(newPos, newAng));
         }
     }
 }
