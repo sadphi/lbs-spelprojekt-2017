@@ -22,9 +22,9 @@ namespace inkArenaGame
         public static ContentManager contentLoader;
 
         List<Player> players;
-        List<Bullet> bullets;
 
         Texture2D bulletTexture;
+
         Texture2D playerTexture;
         Texture2D menuTexture;
 
@@ -75,13 +75,12 @@ namespace inkArenaGame
             gameState = GameState.MainMenu;
 
             players = new List<Player>();
-            bullets = new List<Bullet>();
 
             for (int i = 0; i < 4; i++)
             {
                 if (GamePad.GetState((PlayerIndex)i).IsConnected)
                 {
-                    players.Add(new Player((PlayerIndex)i));
+                    players.Add(new Player((PlayerIndex)i, 100 + i * 1720));
                 }
             }
 
@@ -106,14 +105,13 @@ namespace inkArenaGame
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-
             pixel = new Texture2D(GraphicsDevice, 1, 1);
             pixel.SetData(new Color[] { Color.White });
 
             // TODO: use this.Content to load your game content here
             playerTexture = Content.Load<Texture2D>("Graphics/Players/Player1Standing");
-            bulletTexture = Content.Load<Texture2D>("Graphics/PortalProjectile1");
             menuTexture = Content.Load<Texture2D>("Graphics/Menu2");
+            bulletTexture = Content.Load<Texture2D>("Graphics/GunProjectile1");
         }
 
         /// <summary>
@@ -141,7 +139,7 @@ namespace inkArenaGame
             foreach (Player p in players)
                 p.Update();
 
-            foreach (Bullet b in bullets)
+            foreach (Bullet b in Bullet.All.ToArray())
                 b.Update();
 
             switch (gameState)
@@ -171,8 +169,6 @@ namespace inkArenaGame
                     {
                         btnArray[currentButton].act();
                     }
-
-
                     break;
                 case GameState.Credits:
                     break;
@@ -187,6 +183,7 @@ namespace inkArenaGame
             }
 
             oldState = newState;
+
             base.Update(gameTime);
         }
 
@@ -199,6 +196,7 @@ namespace inkArenaGame
             GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
+
             spriteBatch.Begin();
             switch (gameState)
             {

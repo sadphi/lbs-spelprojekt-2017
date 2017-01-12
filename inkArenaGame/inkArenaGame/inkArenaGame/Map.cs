@@ -11,16 +11,17 @@ namespace inkArenaGame
     {
         List<int[,]> levels;
         List<Texture2D> levelTextures;
-        int[,] currentLevel;
+        public static int[,] currentLevel;
+        Texture2D currentTexture;
 
         public Map()
         {
             levels = new List<int[,]>();
-
+            levelTextures = new List<Texture2D>();
             for (int i = 0; i < 1; i++)
             {
-                levels.Add(LoadLevel("levels/level" + (i + 1) + ".txt", 60, 33));
-                levelTextures.Add(Game1.contentLoader.Load<Texture2D>("Levels/map" + (i + 1) + ".png"));
+                levels.Add(LoadLevel("Levels/level" + (i + 1) + ".txt", 60, 33));
+                levelTextures.Add(Game1.contentLoader.Load<Texture2D>("Graphics/Map" + (i + 1) + "Background"));
             }
 
             ChangeLevel(1);
@@ -29,6 +30,7 @@ namespace inkArenaGame
         public void ChangeLevel(int level)
         {
             currentLevel = levels[level - 1];
+            currentTexture = levelTextures[level - 1];
         }
 
         public void Draw()
@@ -40,6 +42,7 @@ namespace inkArenaGame
                     if (currentLevel[x,y] == 1) Game1.spriteBatch.Draw(Game1.pixel, new Rectangle(x * 32, y * 32, 32, 32), Color.White);
                 }
             }
+            Game1.spriteBatch.Draw(currentTexture, Vector2.Zero, Color.White);
         }
 
         public int[,] LoadLevel(string fileName, int width, int height)
@@ -47,8 +50,9 @@ namespace inkArenaGame
             int counter = 0;
             int[,] myArray = new int[width, height];
             string line;
-
+            fileName = System.IO.File.Exists(fileName) ? fileName : "C:\\Users\\kristoffer.franzon\\Desktop\\level1.txt";
             System.IO.StreamReader file = new System.IO.StreamReader(fileName);
+            
             while ((line = file.ReadLine()) != null)
             {
 
@@ -61,15 +65,6 @@ namespace inkArenaGame
 
 
                 counter++;
-            }
-
-            for (int y = 0; y < 4; y++)
-            {
-                for (int x = 0; x < 4; x++)
-                {
-                    Console.SetCursorPosition(x, y);
-                    Console.Write(myArray[x, y]);
-                }
             }
 
             file.Close();

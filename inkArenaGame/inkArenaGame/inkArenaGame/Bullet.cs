@@ -13,11 +13,15 @@ namespace inkArenaGame
 {
     class Bullet
     {
-        Vector2 position;
+        public Vector2 position;
         Vector2 velocity;
+        public PlayerIndex index;
 
-        public Bullet(Vector2 newPos, Vector2 newVel)
+        public static List<Bullet> All = new List<Bullet>();
+
+        public Bullet(PlayerIndex newIndex, Vector2 newPos, Vector2 newVel)
         {
+            index = newIndex;
             position = newPos;
             velocity = newVel;
         }
@@ -25,11 +29,34 @@ namespace inkArenaGame
         public void Update()
         {
             position += velocity;
+
+            Vector2 velNorm = Vector2.Normalize(velocity);
+            float length = velocity.Length();
+
+            for (int i = 0; i < length; i++)
+            {
+                if (Map.currentLevel[(int)Math.Floor((position.X) / 32), (int)Math.Floor((position.Y) / 32)] == 1)
+                {
+                    Bullet.All.Remove(this);
+                }
+
+                position += velNorm;
+            }
+
+            if (position.X > 1920 || position.X < 0 || position.Y > 1054 || position.Y < 0)
+            {
+                Bullet.All.Remove(this);
+            }
         }
 
         public void Draw(Texture2D bullet)
         {
-            Game1.spriteBatch.Draw(bullet, position, null, Color.White, ((float)Math.Atan2(velocity.Y, velocity.X)), Vector2.One / 2.0f, Vector2.One, SpriteEffects.None, 0);
+            Game1.spriteBatch.Draw(bullet, position, null, Color.White, ((float)Math.Atan2(velocity.Y, velocity.X)), new Vector2(bullet.Width, bullet.Height) / 2.0f, Vector2.One, SpriteEffects.None, 0);
+        }
+
+        public static void Spawn(PlayerIndex index, Vector2 newPos, Vector2 newVel)
+        {
+            Bullet.All.Add(new Bullet(index, newPos, newVel));
         }
     }
 }
