@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bullet.cs" />
+    <Compile Include="Button.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="Particle.cs" />
     <Compile Include="Player.cs" />
