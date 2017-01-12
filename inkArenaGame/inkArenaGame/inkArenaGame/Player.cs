@@ -8,6 +8,8 @@ namespace inkArenaGame
 {
     class Player
     {
+        static SpriteFont font = Game1.contentLoader.Load<SpriteFont>("Font");
+
         Vector2 spawnPos;
         Vector2 position;
         Vector2 velocity;
@@ -40,6 +42,8 @@ namespace inkArenaGame
         public State state;
 
         public int lives;
+
+        public float timer = 1.0f;
 
         public enum State
         {
@@ -97,10 +101,8 @@ namespace inkArenaGame
 
             int dirx = DirX();
             velocity.X += newstate.ThumbSticks.Left.X;
-            if (grounded) velocity.X *= 0.9f;
+            velocity.X *= 0.9f;
             velocity.Y += GRAVITY;
-
-            velocity.X = MathHelper.Clamp(velocity.X, -10, 10);
 
             if (ButtonHit(Buttons.LeftShoulder) && grounded)
             {
@@ -221,6 +223,7 @@ namespace inkArenaGame
             }
 
             #endregion
+
             if (newstate.Buttons.Y == ButtonState.Pressed)
             {
                 state = State.dabing;
@@ -318,12 +321,15 @@ namespace inkArenaGame
             }
             #endregion
 
+            string text = "Player: " + ((int)index + 1);
+            Game1.spriteBatch.DrawString(font, text, new Vector2(position.X + WIDTH / 2 - font.MeasureString(text).X / 2, position.Y - 24), new Color(timer, timer, timer, timer));
+
             Game1.spriteBatch.Draw(state == 0 ? standing : (state == (State)1 ? runing : (state == (State)2 ? jumping : dabing)), new Rectangle((int)position.X, (int)position.Y, state == State.dabing ? dabing.Width : WIDTH, HEIGHT), new Rectangle(32 * (currentFrame % 6), 0, state == State.dabing ? dabing.Width : 32, 64), Color.White, 0, Vector2.Zero, flipFrame ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
 
             int armXOffset = 7 * (WIDTH / 32) + (flipFrame ? 18 * (WIDTH / 32) : 0);
 
             if (state != State.dabing) Game1.spriteBatch.Draw(arm, new Vector2(position.X + armXOffset, position.Y + 18 * (WIDTH / 32)), null, Color.White, angle, new Vector2(3, 5), 1, flipFrame ? SpriteEffects.FlipVertically : SpriteEffects.None, 0);
-
+            if (timer > 0) timer -= 0.002f;
         }
     }
 }
