@@ -9,11 +9,11 @@ namespace inkArenaGame
 {
     class Map
     {
-        List<int[,]> levels;
-        List<Texture2D> levelTextures;
+        static List<int[,]> levels;
+        public static List<Texture2D> levelTextures;
         private static int[,] currentLevel;
         
-        Texture2D currentTexture;
+        static Texture2D currentTexture;
 
         public Map()
         {
@@ -25,13 +25,13 @@ namespace inkArenaGame
                 levelTextures.Add(Game1.contentLoader.Load<Texture2D>("Levels/Map" + (i + 1) + "Background"));
             }
 
-            ChangeLevel(1);
+            ChangeLevel(0);
         }
 
-        public void ChangeLevel(int level)
+        public static void ChangeLevel(int level)
         {
-            currentLevel = levels[level - 1];
-            currentTexture = levelTextures[level - 1];
+            currentLevel = levels[level];
+            currentTexture = levelTextures[level];
         }
 
         public static int CurrentIndex(int x, int y)

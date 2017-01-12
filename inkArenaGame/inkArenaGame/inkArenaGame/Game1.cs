@@ -39,7 +39,8 @@ namespace inkArenaGame
         Map map;
 
         int currentButton;
-        GameState gameState;
+        int currentLevelHighlighted;
+        GameState currentState;
 
         enum GameState
         {
@@ -76,7 +77,7 @@ namespace inkArenaGame
             this.graphics.PreferMultiSampling = true;
             this.graphics.ApplyChanges();
 
-            gameState = GameState.MainMenu;
+            currentState = GameState.MainMenu;
 
             players = new List<Player>();
 
@@ -93,10 +94,11 @@ namespace inkArenaGame
             map = new Map();
 
             currentButton = 0;
+            currentLevelHighlighted = 0;
 
             btnArray = new Button[3];
-            btnArray[0] = new Button(960, 350, Content.Load<Texture2D>("Graphics/Buttons/Playbutton"), () => { gameState = GameState.LevelSelect; });
-            btnArray[1] = new Button(960, 550, Content.Load<Texture2D>("Graphics/Buttons/Creditsbutton"), () => { gameState = GameState.Credits; });
+            btnArray[0] = new Button(960, 350, Content.Load<Texture2D>("Graphics/Buttons/Playbutton"), () => { currentState = GameState.LevelSelect; });
+            btnArray[1] = new Button(960, 550, Content.Load<Texture2D>("Graphics/Buttons/Creditsbutton"), () => { currentState = GameState.Credits; });
             btnArray[2] = new Button(960, 750, Content.Load<Texture2D>("Graphics/Buttons/Quitbutton"), () => { Environment.Exit(0); });
 
             base.Initialize();
@@ -144,7 +146,7 @@ namespace inkArenaGame
             newGamePadState = GamePad.GetState(PlayerIndex.One);
             newKeyboardState = Keyboard.GetState();
             
-            switch (gameState)
+            switch (currentState)
             {
                 case GameState.MainMenu:
                     if ((newGamePadState.DPad.Down == ButtonState.Pressed && oldGamePadState.DPad.Down == ButtonState.Released) || 
@@ -175,8 +177,41 @@ namespace inkArenaGame
                         btnArray[currentButton].act();
                     }
                     break;
+
+                case GameState.LevelSelect:
+                    if ((newGamePadState.DPad.Right == ButtonState.Pressed && oldGamePadState.DPad.Right == ButtonState.Released) ||
+                        (newKeyboardState.IsKeyDown(Keys.Right) && oldKeyboardState.IsKeyUp(Keys.Right)))
+                    {
+                        currentLevelHighlighted++;
+                    }
+
+                    if ((newGamePadState.DPad.Left == ButtonState.Pressed && oldGamePadState.DPad.Left == ButtonState.Released) ||
+                        (newKeyboardState.IsKeyDown(Keys.Left) && oldKeyboardState.IsKeyUp(Keys.Left)))
+                    {
+                        currentLevelHighlighted--;
+                    }
+
+                    if (currentLevelHighlighted >= Map.levelTextures.Count())
+                    {
+                        currentLevelHighlighted = 0;
+                    }
+
+                    if (currentButton <= -1)
+                    {
+                        currentLevelHighlighted = Map.levelTextures.Count() - 1;
+                    }
+
+                    if ((newGamePadState.Buttons.A == ButtonState.Pressed && oldGamePadState.Buttons.A == ButtonState.Released) ||
+                        (newKeyboardState.IsKeyDown(Keys.Enter) && oldKeyboardState.IsKeyUp(Keys.Enter)))
+                    {
+                        Map.ChangeLevel(currentLevelHighlighted);
+                        currentState = GameState.Playing;
+                    }
+                    break;
+
                 case GameState.Credits:
                     break;
+
                 case GameState.Playing:
                     bool hit = false;
 
@@ -196,10 +231,13 @@ namespace inkArenaGame
                     }
                     
                     break;
+
                 case GameState.Paused:
                     break;
+
                 case GameState.GameOver:
                     break;
+
                 default:
                     break;
             }
@@ -221,7 +259,7 @@ namespace inkArenaGame
             // TODO: Add your drawing code here
 
             spriteBatch.Begin();
-            switch (gameState)
+            switch (currentState)
             {
                 case GameState.MainMenu:
                     spriteBatch.Draw(menuTexture, new Vector2(0, 0), Color.White);
@@ -231,11 +269,15 @@ namespace inkArenaGame
                     }
 
                     btnArray[currentButton].Draw(new Color(255, 255, 255, 100));
+                    break;
+                case GameState.LevelSelect:
 
                     break;
+
                 case GameState.Credits:
                     spriteBatch.Draw(credits, new Vector2(0, 0), Color.White);
                     break;
+
                 case GameState.Playing:
                     spriteBatch.Draw(playerTexture, new Vector2(0, 0), Color.White);
                     map.Draw();
@@ -251,10 +293,13 @@ namespace inkArenaGame
 
                     Particle.DrawAll();
                     break;
+
                 case GameState.Paused:
                     break;
+
                 case GameState.GameOver:
                     break;
+
                 default:
                     break;
             }
