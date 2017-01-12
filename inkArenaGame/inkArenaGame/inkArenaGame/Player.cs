@@ -223,7 +223,7 @@ namespace inkArenaGame
                     bx = (int)Math.Floor(px / 32.0f + x);
                     by = (int)Math.Floor(py / 32.0f + y);
 
-                    if (Map.currentLevel[bx, by] == 1)
+                    if (Map.CurrentIndex(bx, by) == 1)
                     {
                         if (Collision(px, py, bx * 32, by * 32, WIDTH, HEIGHT, 32, 32))
                         {
@@ -261,7 +261,7 @@ namespace inkArenaGame
                         bx = (int)Math.Floor(position.X / 32.0f + x);
                         by = (int)Math.Floor(position.Y / 32.0f + y);
 
-                        if (Map.currentLevel[bx, by] == 1)
+                        if (Map.CurrentIndex(bx, by) == 1)
                         {
                             if (Collision(position.X, position.Y, bx * 32, by * 32, WIDTH, HEIGHT, 32, 32))
                             {

@@ -11,7 +11,8 @@ namespace inkArenaGame
     {
         List<int[,]> levels;
         List<Texture2D> levelTextures;
-        public static int[,] currentLevel;
+        private static int[,] currentLevel;
+        
         Texture2D currentTexture;
 
         public Map()
@@ -31,6 +32,14 @@ namespace inkArenaGame
         {
             currentLevel = levels[level - 1];
             currentTexture = levelTextures[level - 1];
+        }
+
+        public static int CurrentIndex(int x, int y)
+        {
+            x = (int)MathHelper.Clamp(x, 0, 59);
+            y = (int)MathHelper.Clamp(y, 0, 32);
+
+            return currentLevel[x, y];
         }
 
         public void Draw()

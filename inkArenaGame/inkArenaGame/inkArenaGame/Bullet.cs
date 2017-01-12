@@ -35,7 +35,7 @@ namespace inkArenaGame
 
             for (int i = 0; i < length; i++)
             {
-                if (Map.currentLevel[(int)Math.Floor((position.X) / 32), (int)Math.Floor((position.Y) / 32)] == 1)
+                if (Map.CurrentIndex((int)Math.Floor((position.X) / 32), (int)Math.Floor((position.Y) / 32)) == 1)
                 {
                     Bullet.All.Remove(this);
                 }
