@@ -31,6 +31,7 @@ namespace inkArenaGame
         Texture2D runing;
         Texture2D jumping;
         Texture2D arm;
+        Texture2D dabing;
 
         private float frameClock;
         private int currentFrame;
@@ -44,7 +45,8 @@ namespace inkArenaGame
         {
             standing = 0,
             walking = 1,
-            jumping = 2
+            jumping = 2,
+            dabing = 3
         }
 
         public Player(PlayerIndex playerIndex, int nx)
@@ -69,13 +71,21 @@ namespace inkArenaGame
 
         private void LoadContent()
         {
-            //if (index == 0)
+            if (index == 0)
             {
                 standing = Game1.contentLoader.Load<Texture2D>("Graphics/Players/Player1Standing");
                 runing = Game1.contentLoader.Load<Texture2D>("Graphics/Players/Player1Run");
                 jumping = Game1.contentLoader.Load<Texture2D>("Graphics/Players/Player1Jump");
-
-                arm = Game1.contentLoader.Load<Texture2D>("Graphics/Players/PlayerArm");
+                dabing = Game1.contentLoader.Load<Texture2D>("Graphics/Players/Player1Dab");
+                arm = Game1.contentLoader.Load<Texture2D>("Graphics/Players/Player1Arm");
+            }
+            else
+            {
+                standing = Game1.contentLoader.Load<Texture2D>("Graphics/Players/Player2Stand");
+                runing = Game1.contentLoader.Load<Texture2D>("Graphics/Players/Player2Run");
+                jumping = Game1.contentLoader.Load<Texture2D>("Graphics/Players/Player2Jump");
+                dabing = Game1.contentLoader.Load<Texture2D>("Graphics/Players/Player2Dab");
+                arm = Game1.contentLoader.Load<Texture2D>("Graphics/Players/Player2Arm");
             }
         }
 
@@ -202,6 +212,10 @@ namespace inkArenaGame
             }
 
             #endregion
+            if (newstate.Buttons.Y == ButtonState.Pressed)
+            {
+                state = State.dabing;
+            }
 
             oldstate = newstate;
         }
@@ -295,11 +309,11 @@ namespace inkArenaGame
             }
             #endregion
 
-            Game1.spriteBatch.Draw(state == 0 ? standing : (state == (State)1 ? runing : jumping), new Rectangle((int)position.X, (int)position.Y, WIDTH, HEIGHT), new Rectangle(32 * (currentFrame % 6), 0, 32, 64), Color.White, 0, Vector2.Zero, flipFrame ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
+            Game1.spriteBatch.Draw(state == 0 ? standing : (state == (State)1 ? runing : (state == (State)2 ? jumping : dabing)), new Rectangle((int)position.X, (int)position.Y, state == State.dabing ? dabing.Width : WIDTH, HEIGHT), new Rectangle(32 * (currentFrame % 6), 0, state == State.dabing ? dabing.Width : 32, 64), Color.White, 0, Vector2.Zero, flipFrame ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
 
             int armXOffset = 7 * (WIDTH / 32) + (flipFrame ? 18 * (WIDTH / 32) : 0);
 
-            Game1.spriteBatch.Draw(arm, new Vector2(position.X + armXOffset, position.Y + 18 * (WIDTH / 32)), null, Color.White, angle, new Vector2(3, 5), 1, flipFrame ? SpriteEffects.FlipVertically : SpriteEffects.None, 0);
+            if (state != State.dabing) Game1.spriteBatch.Draw(arm, new Vector2(position.X + armXOffset, position.Y + 18 * (WIDTH / 32)), null, Color.White, angle, new Vector2(3, 5), 1, flipFrame ? SpriteEffects.FlipVertically : SpriteEffects.None, 0);
 
         }
     }

@@ -52,8 +52,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Graphics\Players\PlayerArm.png">
-      <Name>PlayerArm</Name>
+    <Compile Include="Graphics\Players\Player1Arm.png">
+      <Name>Player1Arm</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -107,6 +107,41 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Graphics\Players\Player2Arm.png">
+      <Name>Player2Arm</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="Graphics\Players\Player2Dab.png">
+      <Name>Player2Dab</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="Graphics\Players\Player2Jump.png">
+      <Name>Player2Jump</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="Graphics\Players\Player2Run.png">
+      <Name>Player2Run</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="Graphics\Players\Player2Stand.png">
+      <Name>Player2Stand</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="Graphics\Players\Player1Dab.png">
+      <Name>Player1Dab</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
     <Content Include="Levels\level1.txt">
       <Name>level1</Name>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
