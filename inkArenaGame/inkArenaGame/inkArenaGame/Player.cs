@@ -173,7 +173,7 @@ namespace inkArenaGame
             }
 
             if (ButtonHit(Buttons.RightShoulder))
-                Bullet.Spawn(new Vector2(position.X + 7 + (flipFrame ? 18 : 0), position.Y + 15) + new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle)) * arm.Width, new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle)) * 10);
+                Bullet.Spawn(index, new Vector2(position.X + 7 + (flipFrame ? 18 : 0), position.Y + 15) + new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle)) * arm.Width, new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle)) * 10);
 
             #endregion
 
