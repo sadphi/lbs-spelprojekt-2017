@@ -22,10 +22,8 @@ namespace inkArenaGame
         public static ContentManager contentLoader;
 
         List<Player> players;
-        List<Bullet> bullets;
 
         Texture2D bulletTexture;
-        Texture2D playerTexture;
 
         Map map;
 
@@ -55,13 +53,12 @@ namespace inkArenaGame
             this.graphics.ApplyChanges();
 
             players = new List<Player>();
-            bullets = new List<Bullet>();
 
             for (int i = 0; i < 4; i++)
             {
                 if (GamePad.GetState((PlayerIndex)i).IsConnected)
                 {
-                    players.Add(new Player((PlayerIndex)i));
+                    players.Add(new Player((PlayerIndex)i, 100 + i * 1720));
                 }
             }
 
@@ -82,10 +79,8 @@ namespace inkArenaGame
 
             pixel = new Texture2D(GraphicsDevice, 1, 1);
             pixel.SetData(new Color[] { Color.White });
-            
             // TODO: use this.Content to load your game content here
-            playerTexture = Content.Load<Texture2D>("Graphics/Players/Player1Standing");
-            bulletTexture = Content.Load<Texture2D>("Graphics/PortalProjectile1");
+            bulletTexture = Content.Load<Texture2D>("Graphics/GunProjectile1");
         }
 
         /// <summary>
@@ -111,7 +106,7 @@ namespace inkArenaGame
             foreach (Player p in players)
                 p.Update();
 
-            foreach (Bullet b in bullets)
+            foreach (Bullet b in Bullet.All.ToArray())
                 b.Update();
 
             base.Update(gameTime);
@@ -126,15 +121,14 @@ namespace inkArenaGame
             GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
-            spriteBatch.Begin();
-            spriteBatch.Draw(playerTexture, new Vector2(0, 0), Color.White);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, null, null);
             map.Draw();
             foreach (Player p in players)
             {
-                p.Draw(playerTexture);
+                p.Draw();
             }
 
-            foreach (Bullet b in bullets)
+            foreach (Bullet b in Bullet.All)
             {
                 b.Draw(bulletTexture);
             }
