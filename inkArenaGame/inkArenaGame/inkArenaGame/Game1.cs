@@ -40,7 +40,9 @@ namespace inkArenaGame
 
         int currentButton;
         int currentLevelHighlighted;
+
         GameState currentState;
+        GameState oldState;
 
         int numOfPlayers;
 
@@ -141,8 +143,8 @@ namespace inkArenaGame
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+            //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            //    Exit();
 
             newGamePadState = GamePad.GetState(PlayerIndex.One);
             newKeyboardState = Keyboard.GetState();
@@ -175,6 +177,7 @@ namespace inkArenaGame
                     if ((newGamePadState.Buttons.A == ButtonState.Pressed && oldGamePadState.Buttons.A == ButtonState.Released) || 
                         (newKeyboardState.IsKeyDown(Keys.Enter) && oldKeyboardState.IsKeyUp(Keys.Enter)))
                     {
+                        oldState = currentState;
                         btnArray[currentButton].act();
                     }
                     break;
@@ -206,6 +209,7 @@ namespace inkArenaGame
                         (newKeyboardState.IsKeyDown(Keys.Enter) && oldKeyboardState.IsKeyUp(Keys.Enter)))
                     {
                         Map.ChangeLevel(currentLevelHighlighted);
+                        oldState = currentState;
                         currentState = GameState.Playing;
                         players.Add(new Player((PlayerIndex)2, 980));
                         for (int i = 0; i < numOfPlayers; i++)
@@ -213,9 +217,20 @@ namespace inkArenaGame
                             players.Add(new Player((PlayerIndex)i, 100 + i * 1720));
                         }
                     }
+
+                    if ((newGamePadState.Buttons.Back == ButtonState.Pressed && oldGamePadState.Buttons.Back == ButtonState.Released) ||
+                        (newKeyboardState.IsKeyDown(Keys.Escape) && oldKeyboardState.IsKeyUp(Keys.Escape)))
+                    {
+                        currentState = oldState;
+                    }
                     break;
 
                 case GameState.Credits:
+                    if ((newGamePadState.Buttons.Back == ButtonState.Pressed && oldGamePadState.Buttons.Back == ButtonState.Released) ||
+                        (newKeyboardState.IsKeyDown(Keys.Escape) && oldKeyboardState.IsKeyUp(Keys.Escape)))
+                    {
+                        currentState = oldState;
+                    }
                     break;
 
                 case GameState.Playing:
@@ -247,10 +262,20 @@ namespace inkArenaGame
                             i++;
                         }
                     }
-                    
+
+                    if ((newGamePadState.Buttons.Back == ButtonState.Pressed && oldGamePadState.Buttons.Back == ButtonState.Released) ||
+                        (newKeyboardState.IsKeyDown(Keys.Escape) && oldKeyboardState.IsKeyUp(Keys.Escape)))
+                    {
+                        currentState = GameState.Paused;
+                    }
                     break;
 
                 case GameState.Paused:
+                    if ((newGamePadState.Buttons.Back == ButtonState.Pressed && oldGamePadState.Buttons.Back == ButtonState.Released) ||
+                        (newKeyboardState.IsKeyDown(Keys.Escape) && oldKeyboardState.IsKeyUp(Keys.Escape)))
+                    {
+                        currentState = GameState.Playing;
+                    }
                     break;
 
                 case GameState.GameOver:
@@ -313,6 +338,21 @@ namespace inkArenaGame
                     break;
 
                 case GameState.Paused:
+                    spriteBatch.Draw(playerTexture, new Vector2(0, 0), Color.White);
+                    map.Draw();
+                    foreach (Player p in players)
+                    {
+                        p.Draw();
+                    }
+
+                    foreach (Bullet b in Bullet.All)
+                    {
+                        b.Draw(bulletTexture);
+                    }
+
+                    Particle.DrawAll();
+
+                    spriteBatch.Draw(btnArray[0].texture, Vector2.Zero, Color.White);
                     break;
 
                 case GameState.GameOver:
