@@ -26,16 +26,25 @@ namespace inkArenaGame
 
         Texture2D bulletTexture;
         Texture2D playerTexture;
+        Texture2D menuTexture;
 
-        Button[] btn = new Button[3];
+        GamePadState newState;
+        GamePadState oldState;
+
+        Button[] btnArray;
 
         Map map;
-        Button button;
+
+        int currentButton;
+        GameState gameState;
+
         enum GameState
         {
-            StartMenu,
+            MainMenu,
+            Credits,
             Playing,
-            Paused
+            Paused,
+            GameOver
         }
 
         public Game1()
@@ -55,13 +64,15 @@ namespace inkArenaGame
             contentLoader = Content;
 
             this.Window.Title = "A game by Inkognito";
-            this.IsMouseVisible = true;
+            this.IsMouseVisible = false;
 
             this.graphics.PreferredBackBufferWidth = 1920;
             this.graphics.PreferredBackBufferHeight = 1056;
             this.graphics.IsFullScreen = false;
             this.graphics.PreferMultiSampling = true;
             this.graphics.ApplyChanges();
+
+            gameState = GameState.MainMenu;
 
             players = new List<Player>();
             bullets = new List<Bullet>();
@@ -76,10 +87,12 @@ namespace inkArenaGame
 
             map = new Map();
 
-            
-            btn[0] = new Button(960, 250, Content.Load<Texture2D>("Graphics/PortalProjectile1"));
-            btn[1] = new Button(960, 450, Content.Load<Texture2D>("Graphics/PortalProjectile1"));
-            btn[2] = new Button(960, 650, Content.Load<Texture2D>("Graphics/PortalProjectile1"));
+            currentButton = 0;
+
+            btnArray = new Button[3];
+            btnArray[0] = new Button(960, 350, Content.Load<Texture2D>("Graphics/Buttons/Playbutton"), () => { gameState = GameState.Playing; });
+            btnArray[1] = new Button(960, 550, Content.Load<Texture2D>("Graphics/Buttons/Creditsbutton"), () => { gameState = GameState.Credits; });
+            btnArray[2] = new Button(960, 750, Content.Load<Texture2D>("Graphics/Buttons/Quitbutton"), () => { Environment.Exit(0); });
 
             base.Initialize();
         }
@@ -96,10 +109,11 @@ namespace inkArenaGame
 
             pixel = new Texture2D(GraphicsDevice, 1, 1);
             pixel.SetData(new Color[] { Color.White });
-            
+
             // TODO: use this.Content to load your game content here
             playerTexture = Content.Load<Texture2D>("Graphics/Players/Player1Standing");
             bulletTexture = Content.Load<Texture2D>("Graphics/PortalProjectile1");
+            menuTexture = Content.Load<Texture2D>("Graphics/Menu2");
         }
 
         /// <summary>
@@ -122,12 +136,57 @@ namespace inkArenaGame
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            newState = GamePad.GetState(PlayerIndex.One);
+
             foreach (Player p in players)
                 p.Update();
 
             foreach (Bullet b in bullets)
                 b.Update();
 
+            switch (gameState)
+            {
+                case GameState.MainMenu:
+                    if (newState.DPad.Down == ButtonState.Pressed && oldState.DPad.Down == ButtonState.Released)
+                    {
+                        currentButton++;
+                    }
+
+                    if (newState.DPad.Up == ButtonState.Pressed && oldState.DPad.Up == ButtonState.Released)
+                    {
+                        currentButton--;
+                    }
+
+                    if (currentButton >= btnArray.Length)
+                    {
+                        currentButton = 0;
+                    }
+
+                    if (currentButton <= -1)
+                    {
+                        currentButton = btnArray.Length - 1;
+                    }
+
+                    if (newState.Buttons.A == ButtonState.Pressed && oldState.Buttons.A == ButtonState.Released)
+                    {
+                        btnArray[currentButton].act();
+                    }
+
+
+                    break;
+                case GameState.Credits:
+                    break;
+                case GameState.Playing:
+                    break;
+                case GameState.Paused:
+                    break;
+                case GameState.GameOver:
+                    break;
+                default:
+                    break;
+            }
+
+            oldState = newState;
             base.Update(gameTime);
         }
 
@@ -141,20 +200,42 @@ namespace inkArenaGame
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
-            
-            spriteBatch.Draw(playerTexture, new Vector2(0, 0), Color.White);
-            map.Draw();
-            foreach (Player p in players)
+            switch (gameState)
             {
-                p.Draw(playerTexture);
+                case GameState.MainMenu:
+                    spriteBatch.Draw(menuTexture, new Vector2(0, 0), Color.White);
+                    for (int i = 0; i < btnArray.Length; i++)
+                    {
+                        btnArray[i].Draw(Color.White);
+                    }
+                    
+                    btnArray[currentButton].Draw(new Color(255, 255, 255, 100));
+
+
+                    break;
+                case GameState.Credits:
+                    break;
+                case GameState.Playing:
+                    spriteBatch.Draw(playerTexture, new Vector2(0, 0), Color.White);
+                    map.Draw();
+                    foreach (Player p in players)
+                    {
+                        p.Draw(playerTexture);
+                    }
+
+                    foreach (Bullet b in bullets)
+                    {
+                        b.Draw(bulletTexture);
+                    }
+                    break;
+                case GameState.Paused:
+                    break;
+                case GameState.GameOver:
+                    break;
+                default:
+                    break;
             }
 
-            foreach (Bullet b in bullets)
-            {
-                b.Draw(bulletTexture);
-            }
-
-            btn[0].Draw();
             spriteBatch.End();
 
             base.Draw(gameTime);

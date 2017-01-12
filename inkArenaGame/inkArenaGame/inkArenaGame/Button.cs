@@ -9,20 +9,21 @@ namespace inkArenaGame
 {
     class Button
     {
-        int buttonX, buttonY;
+        public int buttonX, buttonY;
         public Action act;
-        Texture2D texture;
+        public Texture2D texture;
 
-        public Button(int x, int y, Texture2D text)
+        public Button(int x, int y, Texture2D text, Action newAct)
         {
             buttonX = x;
             buttonY = y;
             texture = text;
+            act = newAct;
         }
 
-        public void Draw()
+        public void Draw(Color color)
         {
-            Game1.spriteBatch.Draw(texture, new Vector2(buttonX, buttonY), Color.White);
+            Game1.spriteBatch.Draw(texture, new Vector2(buttonX - 64, buttonY), color);
         }
     }
 }
