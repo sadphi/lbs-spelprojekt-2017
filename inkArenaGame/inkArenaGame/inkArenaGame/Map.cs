@@ -22,7 +22,7 @@ namespace inkArenaGame
             for (int i = 0; i < 1; i++)
             {
                 levels.Add(LoadLevel("Levels/level" + (i + 1) + ".txt", 60, 33));
-                levelTextures.Add(Game1.contentLoader.Load<Texture2D>("Graphics/Map" + (i + 1) + "Background"));
+                levelTextures.Add(Game1.contentLoader.Load<Texture2D>("Levels/Map" + (i + 1) + "Background"));
             }
 
             ChangeLevel(1);
@@ -59,7 +59,7 @@ namespace inkArenaGame
             int counter = 0;
             int[,] myArray = new int[width, height];
             string line;
-            fileName = System.IO.File.Exists(fileName) ? fileName : "C:\\Users\\kristoffer.franzon\\Desktop\\level1.txt";
+            fileName = System.IO.File.Exists(fileName) ? fileName : "C:\\Users\\philip.sadrian\\Desktop\\level1.txt";
             System.IO.StreamReader file = new System.IO.StreamReader(fileName);
             
             while ((line = file.ReadLine()) != null)

@@ -28,8 +28,11 @@ namespace inkArenaGame
         Texture2D playerTexture;
         Texture2D menuTexture;
 
-        GamePadState newState;
-        GamePadState oldState;
+        GamePadState newGamePadState;
+        GamePadState oldGamePadState;
+
+        KeyboardState newKeyboardState;
+        KeyboardState oldKeyboardState;
 
         Button[] btnArray;
 
@@ -63,7 +66,7 @@ namespace inkArenaGame
         {
             contentLoader = Content;
 
-            this.Window.Title = "A game by Inkognito";
+            this.Window.Title = "Hillbilly Havok";
             this.IsMouseVisible = false;
 
             this.graphics.PreferredBackBufferWidth = 1920;
@@ -134,23 +137,20 @@ namespace inkArenaGame
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            newState = GamePad.GetState(PlayerIndex.One);
-
-            foreach (Player p in players)
-                p.Update();
-
-            foreach (Bullet b in Bullet.All.ToArray())
-                b.Update();
-
+            newGamePadState = GamePad.GetState(PlayerIndex.One);
+            newKeyboardState = Keyboard.GetState();
+            
             switch (gameState)
             {
                 case GameState.MainMenu:
-                    if (newState.DPad.Down == ButtonState.Pressed && oldState.DPad.Down == ButtonState.Released)
+                    if ((newGamePadState.DPad.Down == ButtonState.Pressed && oldGamePadState.DPad.Down == ButtonState.Released) || 
+                        (newKeyboardState.IsKeyDown(Keys.Down) && oldKeyboardState.IsKeyUp(Keys.Down)))
                     {
                         currentButton++;
                     }
 
-                    if (newState.DPad.Up == ButtonState.Pressed && oldState.DPad.Up == ButtonState.Released)
+                    if ((newGamePadState.DPad.Up == ButtonState.Pressed && oldGamePadState.DPad.Up == ButtonState.Released) || 
+                        (newKeyboardState.IsKeyDown(Keys.Up) && oldKeyboardState.IsKeyUp(Keys.Up)))
                     {
                         currentButton--;
                     }
@@ -165,7 +165,8 @@ namespace inkArenaGame
                         currentButton = btnArray.Length - 1;
                     }
 
-                    if (newState.Buttons.A == ButtonState.Pressed && oldState.Buttons.A == ButtonState.Released)
+                    if ((newGamePadState.Buttons.A == ButtonState.Pressed && oldGamePadState.Buttons.A == ButtonState.Released) || 
+                        (newKeyboardState.IsKeyDown(Keys.Enter) && oldKeyboardState.IsKeyUp(Keys.Enter)))
                     {
                         btnArray[currentButton].act();
                     }
@@ -173,6 +174,11 @@ namespace inkArenaGame
                 case GameState.Credits:
                     break;
                 case GameState.Playing:
+                    foreach (Player p in players)
+                        p.Update();
+
+                    foreach (Bullet b in Bullet.All.ToArray())
+                        b.Update();
                     break;
                 case GameState.Paused:
                     break;
@@ -182,7 +188,8 @@ namespace inkArenaGame
                     break;
             }
 
-            oldState = newState;
+            oldGamePadState = newGamePadState;
+            oldKeyboardState = newKeyboardState;
 
             base.Update(gameTime);
         }
@@ -206,9 +213,8 @@ namespace inkArenaGame
                     {
                         btnArray[i].Draw(Color.White);
                     }
-                    
-                    btnArray[currentButton].Draw(new Color(255, 255, 255, 100));
 
+                    btnArray[currentButton].Draw(new Color(255, 255, 255, 100));
 
                     break;
                 case GameState.Credits:
@@ -218,10 +224,10 @@ namespace inkArenaGame
                     map.Draw();
                     foreach (Player p in players)
                     {
-                        p.Draw(playerTexture);
+                        p.Draw();
                     }
 
-                    foreach (Bullet b in bullets)
+                    foreach (Bullet b in Bullet.All)
                     {
                         b.Draw(bulletTexture);
                     }

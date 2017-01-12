@@ -59,13 +59,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="map1.png">
-      <Name>map1</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Graphics\Players\Player1Jump.png">
       <Name>Player1Jump</Name>
       <Importer>TextureImporter</Importer>
@@ -87,7 +80,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-
     <Compile Include="Graphics\Buttons\Playbutton.png">
       <Name>Playbutton</Name>
       <Importer>TextureImporter</Importer>
@@ -108,15 +100,17 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Content Include="Levels\level1.txt">
-      <Name>level1</Name>
-    </Content>
-    <Compile Include="Graphics\Map1Background.png">
+    <Compile Include="Levels\Map1Background.png">
       <Name>Map1Background</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Levels\level1.txt">
+      <Name>level1</Name>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--  To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -185,6 +185,11 @@ namespace inkArenaGame
                 {
                     if (Collision(position.X, position.Y, b.position.X, b.position.Y, WIDTH, HEIGHT, 1, 1))
                     {
+
+                        while (true)
+                        {
+
+                        }
                         lives -= 1;
                     }
                 }
