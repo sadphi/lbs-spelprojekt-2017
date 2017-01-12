@@ -27,7 +27,16 @@ namespace inkArenaGame
         Texture2D bulletTexture;
         Texture2D playerTexture;
 
+        Button[] btn = new Button[3];
+
         Map map;
+        Button button;
+        enum GameState
+        {
+            StartMenu,
+            Playing,
+            Paused
+        }
 
         public Game1()
         {
@@ -66,6 +75,11 @@ namespace inkArenaGame
             }
 
             map = new Map();
+
+            
+            btn[0] = new Button(960, 250, Content.Load<Texture2D>("Graphics/PortalProjectile1"));
+            btn[1] = new Button(960, 450, Content.Load<Texture2D>("Graphics/PortalProjectile1"));
+            btn[2] = new Button(960, 650, Content.Load<Texture2D>("Graphics/PortalProjectile1"));
 
             base.Initialize();
         }
@@ -127,6 +141,7 @@ namespace inkArenaGame
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
+            
             spriteBatch.Draw(playerTexture, new Vector2(0, 0), Color.White);
             map.Draw();
             foreach (Player p in players)
@@ -139,6 +154,7 @@ namespace inkArenaGame
                 b.Draw(bulletTexture);
             }
 
+            btn[0].Draw();
             spriteBatch.End();
 
             base.Draw(gameTime);
