@@ -37,11 +37,11 @@ namespace inkArenaGame
         private int currentFrame;
         private bool flipFrame;
 
-        State state;
+        public State state;
 
-        public int lives = 3;
+        public int lives;
 
-        enum State
+        public enum State
         {
             standing = 0,
             walking = 1,
@@ -55,7 +55,7 @@ namespace inkArenaGame
             position = new Vector2(nx, 200);
             spawnPos = position;
             velocity = new Vector2(0, 0);
-
+            lives = 3;
             LoadContent();
         }
 
@@ -140,6 +140,15 @@ namespace inkArenaGame
 
             position.X = futureX;
             position.Y = futureY;
+
+            if (position.Y > 1056)
+                position.Y = -HEIGHT;
+
+            if (position.X < -WIDTH)
+                position.X = 1920;
+
+            if (position.X > 1920)
+                position.X = 0;
 
             #endregion
 

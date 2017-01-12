@@ -42,6 +42,8 @@ namespace inkArenaGame
         int currentLevelHighlighted;
         GameState currentState;
 
+        int numOfPlayers;
+
         enum GameState
         {
             MainMenu,
@@ -85,11 +87,10 @@ namespace inkArenaGame
             {
                 if (GamePad.GetState((PlayerIndex)i).IsConnected)
                 {
-                    players.Add(new Player((PlayerIndex)i, 100 + i * 1720));
+                    numOfPlayers++;
                 }
             }
 
-            players.Add(new Player((PlayerIndex)2, 980));
 
             map = new Map();
 
@@ -206,6 +207,11 @@ namespace inkArenaGame
                     {
                         Map.ChangeLevel(currentLevelHighlighted);
                         currentState = GameState.Playing;
+                        players.Add(new Player((PlayerIndex)2, 980));
+                        for (int i = 0; i < numOfPlayers; i++)
+                        {
+                            players.Add(new Player((PlayerIndex)i, 100 + i * 1720));
+                        }
                     }
                     break;
 
@@ -224,9 +230,21 @@ namespace inkArenaGame
                     if (hit)
                     {
                         Bullet.All.Clear();
-                        foreach (Player p in players)
+                        int i = 0;
+                        foreach (Player p in players.ToList())
                         {
+                            p.state = Player.State.dabing;
+                            
+
+                            if (p.lives == 0)
+                            {
+                                currentState = GameState.GameOver;
+                                players[1 - i].state = Player.State.dabing;
+                                players.Remove(p);
+                                break;
+                            }
                             p.Respawn();
+                            i++;
                         }
                     }
                     
@@ -298,6 +316,11 @@ namespace inkArenaGame
                     break;
 
                 case GameState.GameOver:
+                    map.Draw();
+                    foreach (Player p in players)
+                    {
+                        p.Draw();
+                    }
                     break;
 
                 default:

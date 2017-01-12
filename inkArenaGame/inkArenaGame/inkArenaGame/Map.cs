@@ -19,7 +19,7 @@ namespace inkArenaGame
         {
             levels = new List<int[,]>();
             levelTextures = new List<Texture2D>();
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i < 2; i++)
             {
                 levels.Add(LoadLevel("Leveldatas/level" + (i + 1) + ".txt", 60, 33));
                 levelTextures.Add(Game1.contentLoader.Load<Texture2D>("Levels/Map" + (i + 1) + "Background"));

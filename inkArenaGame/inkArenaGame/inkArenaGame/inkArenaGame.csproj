@@ -75,6 +75,9 @@
     <Content Include="Leveldatas\level1.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Leveldatas\level2.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\inkArenaGameContent\inkArenaGameContent.contentproj">
