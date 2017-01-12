@@ -37,6 +37,8 @@ namespace inkArenaGame
 
         State state;
 
+        public int lives = 3;
+
         enum State
         {
             standing = 0,
@@ -49,7 +51,7 @@ namespace inkArenaGame
             index = playerIndex;
             position = new Vector2(nx, 200);
             velocity = new Vector2(0, 0);
-            
+
             LoadContent();
         }
 
@@ -113,7 +115,7 @@ namespace inkArenaGame
                     break;
                 }
             }
-            
+
             position.X = futureX;
             position.Y = futureY;
 
@@ -131,7 +133,7 @@ namespace inkArenaGame
             {
                 frameClock += Math.Abs(velocity.X) * 0.02f;
                 currentFrame = (int)Math.Floor(frameClock);
-                
+
                 state = State.walking;
             }
 
@@ -176,6 +178,17 @@ namespace inkArenaGame
                 Bullet.Spawn(index, new Vector2(position.X + 7 + (flipFrame ? 18 : 0), position.Y + 15) + new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle)) * arm.Width, new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle)) * 10);
 
             #endregion
+
+            foreach (Bullet b in Bullet.All)
+            {
+                if (index != b.index)
+                {
+                    if (Collision(position.X, position.Y, b.position.X, b.position.Y, WIDTH, HEIGHT, 1, 1))
+                    {
+                        lives -= 1;
+                    }
+                }
+            }
 
             oldstate = newstate;
         }

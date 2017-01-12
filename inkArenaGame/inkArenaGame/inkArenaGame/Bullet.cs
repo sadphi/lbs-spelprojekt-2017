@@ -13,9 +13,9 @@ namespace inkArenaGame
 {
     class Bullet
     {
-        Vector2 position;
+        public Vector2 position;
         Vector2 velocity;
-        PlayerIndex index;
+        public PlayerIndex index;
 
         public static List<Bullet> All = new List<Bullet>();
 

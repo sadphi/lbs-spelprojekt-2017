@@ -109,6 +109,7 @@ namespace inkArenaGame
             foreach (Bullet b in Bullet.All.ToArray())
                 b.Update();
 
+
             base.Update(gameTime);
         }
 

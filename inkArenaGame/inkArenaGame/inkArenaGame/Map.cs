@@ -21,7 +21,7 @@ namespace inkArenaGame
             for (int i = 0; i < 1; i++)
             {
                 levels.Add(LoadLevel("Levels/level" + (i + 1) + ".txt", 60, 33));
-                levelTextures.Add(Game1.contentLoader.Load<Texture2D>("map" + (i + 1)));
+                levelTextures.Add(Game1.contentLoader.Load<Texture2D>("Graphics/Map" + (i + 1) + "Background"));
             }
 
             ChangeLevel(1);
@@ -42,7 +42,7 @@ namespace inkArenaGame
                     if (currentLevel[x,y] == 1) Game1.spriteBatch.Draw(Game1.pixel, new Rectangle(x * 32, y * 32, 32, 32), Color.White);
                 }
             }
-            //Game1.spriteBatch.Draw(currentTexture, Vector2.Zero, Color.White);
+            Game1.spriteBatch.Draw(currentTexture, Vector2.Zero, Color.White);
         }
 
         public int[,] LoadLevel(string fileName, int width, int height)
