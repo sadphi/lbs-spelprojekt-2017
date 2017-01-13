@@ -22,7 +22,7 @@ namespace inkArenaGame
             for (int i = 0; i < 2; i++)
             {
                 levels.Add(LoadLevel("Leveldatas/level" + (i + 1) + ".txt", 60, 33));
-                levelTextures.Add(Game1.contentLoader.Load<Texture2D>("Levels/Map" + (i + 1) + "Background"));
+                levelTextures.Add(Game1.contentLoader.Load<Texture2D>("Graphics/Levels/Map" + (i + 1) + "Background"));
             }
 
             ChangeLevel(0);

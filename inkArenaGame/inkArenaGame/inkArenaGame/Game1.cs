@@ -21,7 +21,7 @@ namespace inkArenaGame
         public static Texture2D pixel;
         public static ContentManager contentLoader;
 
-        Random rnd = new Random();
+        Random rnd;
 
         public static SpriteFont font;
 
@@ -33,8 +33,6 @@ namespace inkArenaGame
         Texture2D p1BigArm;
         Texture2D p2BigArm;
         Texture2D creditsTexture;
-
-        Texture2D awesome;
 
         GamePadState newGamePadState;
         GamePadState oldGamePadState;
@@ -100,18 +98,19 @@ namespace inkArenaGame
             this.Window.Title = "Hillbilly Havoc";
             this.IsMouseVisible = false;
 
-            font = Game1.contentLoader.Load<SpriteFont>("Font");
-            countDownFont = Game1.contentLoader.Load<SpriteFont>("CountDownFont");
+            font = Game1.contentLoader.Load<SpriteFont>("Fonts/Font");
+            countDownFont = Game1.contentLoader.Load<SpriteFont>("Fonts/CountDownFont");
 
             this.graphics.PreferredBackBufferWidth = 1920;
             this.graphics.PreferredBackBufferHeight = 1056;
-            this.graphics.IsFullScreen = true;
+            this.graphics.IsFullScreen = false;
             this.graphics.PreferMultiSampling = true;
             this.graphics.ApplyChanges();
 
             countDownPos = new Vector2(1920 / 2, 1056 / 2);
 
             currentState = GameState.MainMenu;
+            rnd = new Random();
 
             players = new List<Player>();
 
@@ -161,7 +160,6 @@ namespace inkArenaGame
             p2BigArm = Content.Load<Texture2D>("Graphics/MenuArm2");
             bulletTexture = Content.Load<Texture2D>("Graphics/GunProjectile1");
             creditsTexture = Content.Load<Texture2D>("Graphics/credits");
-            awesome = Content.Load<Texture2D>("Graphics/AWESOME");
 
             dabSong = Content.Load<Song>("Sounds/dabSong");
             levelSelect = Content.Load<Song>("Sounds/levelselect");
@@ -557,7 +555,7 @@ namespace inkArenaGame
                     }
 
                     string text = "Player " + ((int)players[0].index + 1) + " won!";
-                    string dabText = "Press Y to DAB";
+                    string dabText = "Hold Y to DAB";
                     spriteBatch.DrawString(countDownFont, text, new Vector2(players[0].position.X + 16, players[0].position.Y - 100), Color.White, 0, new Vector2(countDownFont.MeasureString(text).X / 2, 0), 0.2f, SpriteEffects.None, 0);
                     spriteBatch.DrawString(countDownFont, dabText, new Vector2(players[0].position.X + 16, players[0].position.Y - 50), Color.White, 0, new Vector2(countDownFont.MeasureString(dabText).X / 2, 0), 0.1f, SpriteEffects.None, 0);
                     

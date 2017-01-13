@@ -144,11 +144,6 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Graphics\AWESOME.png">
-      <Name>AWESOME</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
     <Compile Include="Graphics\Players\Player1Health.png">
       <Name>Player1Health</Name>
       <Importer>TextureImporter</Importer>
@@ -184,11 +179,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Content Include="Levels\level1.txt">
-      <Name>level1</Name>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Compile Include="Levels\Map2Background.png">
+    <Compile Include="Graphics\Levels\Map2Background.png">
       <Name>Map2Background</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
@@ -198,7 +189,7 @@
       <Importer>Mp3Importer</Importer>
       <Processor>SongProcessor</Processor>
     </Compile>
-    <Compile Include="Levels\Map1Background.png">
+    <Compile Include="Graphics\Levels\Map1Background.png">
       <Name>Map1Background</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
@@ -235,7 +226,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Font.spritefont">
+    <Compile Include="Fonts\Font.spritefont">
       <Name>Font</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
@@ -243,7 +234,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CountDownFont.spritefont">
+    <Compile Include="Fonts\CountDownFont.spritefont">
       <Name>CountDownFont</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
