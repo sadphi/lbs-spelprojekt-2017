@@ -8,7 +8,7 @@ namespace inkArenaGame
 {
     class Player
     {
-        Vector2 spawnPos;
+        public Vector2 spawnPos;
         public Vector2 position;
         Vector2 velocity;
 
@@ -32,6 +32,7 @@ namespace inkArenaGame
         Texture2D jumping;
         Texture2D arm;
         Texture2D dabing;
+        Texture2D hearts;
 
         private float frameClock;
         private int currentFrame;
@@ -58,7 +59,7 @@ namespace inkArenaGame
             position = new Vector2(nx, 300);
             spawnPos = position;
             velocity = new Vector2(0, 0);
-            lives = 1;
+            lives = 3;
             LoadContent();
         }
 
@@ -81,6 +82,7 @@ namespace inkArenaGame
                 jumping = Game1.contentLoader.Load<Texture2D>("Graphics/Players/Player1Jump");
                 dabing = Game1.contentLoader.Load<Texture2D>("Graphics/Players/Player1Dab");
                 arm = Game1.contentLoader.Load<Texture2D>("Graphics/Players/Player1Arm");
+                hearts = Game1.contentLoader.Load<Texture2D>("Graphics/Players/Player1Health");
             }
             else
             {
@@ -89,6 +91,7 @@ namespace inkArenaGame
                 jumping = Game1.contentLoader.Load<Texture2D>("Graphics/Players/Player2Jump");
                 dabing = Game1.contentLoader.Load<Texture2D>("Graphics/Players/Player2Dab");
                 arm = Game1.contentLoader.Load<Texture2D>("Graphics/Players/Player2Arm");
+                hearts = Game1.contentLoader.Load<Texture2D>("Graphics/Players/Player2Health");
             }
         }
 
@@ -333,10 +336,10 @@ namespace inkArenaGame
             #endregion
 
             string text = "Player " + ((int)index + 1);
+            Game1.spriteBatch.Draw(hearts, new Vector2((int)index * (1920 - hearts.Width), 0), new Rectangle(0, 90 * ((3 - lives)), hearts.Width, 90), Color.White);
             Game1.spriteBatch.DrawString(Game1.font, text, new Vector2(position.X + WIDTH / 2 - Game1.font.MeasureString(text).X / 2, position.Y - 24), new Color(timer, timer, timer, timer));
-
             Game1.spriteBatch.Draw(state == 0 ? standing : (state == (State)1 ? runing : (state == (State)2 ? jumping : dabing)), new Rectangle((int)position.X, (int)position.Y, state == State.dabing ? dabing.Width : WIDTH, HEIGHT), new Rectangle(32 * (currentFrame % 6), 0, state == State.dabing ? dabing.Width : 32, 64), Color.White, 0, Vector2.Zero, flipFrame ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
-
+            
             int armXOffset = 7 * (WIDTH / 32) + (flipFrame ? 18 * (WIDTH / 32) : 0);
 
             if (state != State.dabing) Game1.spriteBatch.Draw(arm, new Vector2(position.X + armXOffset, position.Y + 18 * (WIDTH / 32)), null, Color.White, angle, new Vector2(3, 5), 1, flipFrame ? SpriteEffects.FlipVertically : SpriteEffects.None, 0);

@@ -16,20 +16,21 @@ namespace inkArenaGame
         public Vector2 position;
         Vector2 velocity;
         public PlayerIndex index;
+        int timer = 0;
 
         public static List<Bullet> All = new List<Bullet>();
-
+        bool isAlive;
         public Bullet(PlayerIndex newIndex, Vector2 newPos, Vector2 newVel)
         {
             index = newIndex;
             position = newPos;
             velocity = newVel;
+            isAlive = true;
         }
-
         public void Update()
         {
             position += velocity;
-
+            timer++;
             Vector2 velNorm = Vector2.Normalize(velocity);
             float length = velocity.Length();
 
@@ -39,11 +40,20 @@ namespace inkArenaGame
                 int ty = (int)Math.Floor((position.Y) / 32);
                 if (Map.CurrentIndex(tx, ty) == 1)
                 {
-                    Particle.Spawn(position, 0);
+                    if (isAlive)
+                    {
+                        Particle.Spawn(position, 0);
+                        isAlive = false;
+                    }
                     Bullet.All.Remove(this);
                 }
 
                 position += velNorm;
+            }
+
+            if (timer > 800)
+            {
+                All.Remove(this);
             }
 
            

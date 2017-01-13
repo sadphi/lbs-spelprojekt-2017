@@ -19,19 +19,19 @@ namespace inkArenaGame
         float frameTime;
         float angle;
 
-        static Texture2D texture = Game1.contentLoader.Load<Texture2D>("Graphics/GunImpact1");
+        static Texture2D texture = Game1.contentLoader.Load<Texture2D>("Graphics/GunImpact");
 
         public Particle(Vector2 newPos, float newAng)
         {
             position = newPos;
             frameTime = 0;
-            angle = newAng;
+            angle = 0;
             All.Add(this);
         }
 
         public static void DrawAll()
         {
-            foreach (Particle p in Particle.All.ToList())
+            foreach (Particle p in All.ToArray())
             {
                 p.Draw();
             }
@@ -39,7 +39,7 @@ namespace inkArenaGame
 
         public void Draw()
         {
-            Game1.spriteBatch.Draw(texture, position, new Rectangle(32 * (int)Math.Floor(frameTime), 0, 32, 32), Color.White, angle, new Vector2(0, 16), 1, SpriteEffects.None, 0);
+            Game1.spriteBatch.Draw(texture, position, new Rectangle(64 * (int)Math.Floor(frameTime), 0, 64, 64), Color.HotPink, angle, new Vector2(32, 32), 1f, SpriteEffects.None, 0);
             frameTime += 0.1f;
             if (frameTime >= 4)
                 All.Remove(this);

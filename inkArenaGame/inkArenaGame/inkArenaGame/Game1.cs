@@ -32,7 +32,7 @@ namespace inkArenaGame
         Texture2D menuTexture;
         Texture2D p1BigArm;
         Texture2D p2BigArm;
-        Texture2D credits;
+        Texture2D creditsTexture;
 
         Texture2D awesome;
 
@@ -75,6 +75,11 @@ namespace inkArenaGame
         }
 
         Song dabSong;
+        Song levelSelect;
+        Song mainMenu;
+        Song credits;
+        Song stonelevel;
+        Song lavalevel;
 
         public Game1()
         {
@@ -92,7 +97,7 @@ namespace inkArenaGame
         {
             contentLoader = Content;
 
-            this.Window.Title = "Hillbilly Havok";
+            this.Window.Title = "Hillbilly Havoc";
             this.IsMouseVisible = false;
 
             font = Game1.contentLoader.Load<SpriteFont>("Font");
@@ -100,7 +105,7 @@ namespace inkArenaGame
 
             this.graphics.PreferredBackBufferWidth = 1920;
             this.graphics.PreferredBackBufferHeight = 1056;
-            this.graphics.IsFullScreen = false;
+            this.graphics.IsFullScreen = true;
             this.graphics.PreferMultiSampling = true;
             this.graphics.ApplyChanges();
 
@@ -125,15 +130,15 @@ namespace inkArenaGame
             currentLevelHighlighted = 0;
 
             btnMainArray = new Button[3];
-            btnMainArray[0] = new Button(960, 350, Content.Load<Texture2D>("Graphics/Buttons/Playbutton"), () => { currentState = GameState.LevelSelect; });
-            btnMainArray[1] = new Button(960, 550, Content.Load<Texture2D>("Graphics/Buttons/Creditsbutton"), () => { currentState = GameState.Credits; });
+            btnMainArray[0] = new Button(960, 350, Content.Load<Texture2D>("Graphics/Buttons/Playbutton"), () => { currentState = GameState.LevelSelect; MediaPlayer.Stop(); });
+            btnMainArray[1] = new Button(960, 550, Content.Load<Texture2D>("Graphics/Buttons/Creditsbutton"), () => { currentState = GameState.Credits; MediaPlayer.Stop(); });
             btnMainArray[2] = new Button(960, 750, Content.Load<Texture2D>("Graphics/Buttons/Quitbutton"), () => { Environment.Exit(0); });
 
             btnPauseArray = new Button[3];
-            btnPauseArray[0] = new Button(960, 350, Content.Load<Texture2D>("Graphics/Buttons/Playbutton"), () => { currentState = GameState.Playing; });
-            btnPauseArray[1] = new Button(960, 550, Content.Load<Texture2D>("Graphics/Buttons/Creditsbutton"), () => { currentState = GameState.LevelSelect; });
-            btnPauseArray[2] = new Button(960, 750, Content.Load<Texture2D>("Graphics/Buttons/Quitbutton"), () => { currentState = GameState.MainMenu; currentButton = 0;});
-
+            btnPauseArray[0] = new Button(960, 350, Content.Load<Texture2D>("Graphics/Buttons/Resumebutton"), () => { currentState = GameState.Playing; MediaPlayer.Resume(); });
+            btnPauseArray[1] = new Button(960, 550, Content.Load<Texture2D>("Graphics/Buttons/levelbutton"), () => { currentState = GameState.LevelSelect; MediaPlayer.Stop(); });
+            btnPauseArray[2] = new Button(960, 750, Content.Load<Texture2D>("Graphics/Buttons/Quitbutton"), () => { currentState = GameState.MainMenu; currentButton = 0; MediaPlayer.Stop(); });
+            
             base.Initialize();
         }
 
@@ -155,11 +160,18 @@ namespace inkArenaGame
             p1BigArm = Content.Load<Texture2D>("Graphics/MenuArm1");
             p2BigArm = Content.Load<Texture2D>("Graphics/MenuArm2");
             bulletTexture = Content.Load<Texture2D>("Graphics/GunProjectile1");
-            credits = Content.Load<Texture2D>("Graphics/credits");
+            creditsTexture = Content.Load<Texture2D>("Graphics/credits");
             awesome = Content.Load<Texture2D>("Graphics/AWESOME");
 
             dabSong = Content.Load<Song>("Sounds/dabSong");
+            levelSelect = Content.Load<Song>("Sounds/levelselect");
+            mainMenu = Content.Load<Song>("Sounds/mainmenu");
+            credits = Content.Load<Song>("Sounds/credits");
+            stonelevel = Content.Load<Song>("Sounds/stonelevel");
+            lavalevel = Content.Load<Song>("Sounds/lavalevel");
 
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.Stop();            
         }
 
         /// <summary>
@@ -188,6 +200,11 @@ namespace inkArenaGame
             switch (currentState)
             {
                 case GameState.MainMenu:
+                    if (MediaPlayer.State == MediaState.Stopped)
+                    {
+                        MediaPlayer.Play(mainMenu);
+                    }
+
                     if ((newGamePadState.DPad.Down == ButtonState.Pressed && oldGamePadState.DPad.Down == ButtonState.Released) ||
                         (newKeyboardState.IsKeyDown(Keys.Down) && oldKeyboardState.IsKeyUp(Keys.Down)))
                     {
@@ -219,6 +236,11 @@ namespace inkArenaGame
                     break;
 
                 case GameState.LevelSelect:
+                    if (MediaPlayer.State == MediaState.Stopped)
+                    {
+                        MediaPlayer.Play(levelSelect);
+                    }
+
                     if ((newGamePadState.DPad.Right == ButtonState.Pressed && oldGamePadState.DPad.Right == ButtonState.Released) ||
                         (newKeyboardState.IsKeyDown(Keys.Right) && oldKeyboardState.IsKeyUp(Keys.Right)))
                     {
@@ -244,6 +266,15 @@ namespace inkArenaGame
                     if ((newGamePadState.Buttons.A == ButtonState.Pressed && oldGamePadState.Buttons.A == ButtonState.Released) ||
                         (newKeyboardState.IsKeyDown(Keys.Enter) && oldKeyboardState.IsKeyUp(Keys.Enter)))
                     {
+                        MediaPlayer.Stop();
+                        if (currentLevelHighlighted == 0)
+                        {
+                            MediaPlayer.Play(stonelevel);
+                        }
+                        else
+                        {
+                            MediaPlayer.Play(lavalevel);
+                        }
                         Map.ChangeLevel(currentLevelHighlighted);
                         countDownTimer = 3;
                         countDownScale = 1;
@@ -259,21 +290,26 @@ namespace inkArenaGame
                         {
                             players.Add(new Player((PlayerIndex)i, 100 + i * 1720));
                         }
-                        MediaPlayer.Play(dabSong);
-                        MediaPlayer.Pause();
                     }
 
                     if ((newGamePadState.Buttons.B == ButtonState.Pressed && oldGamePadState.Buttons.B == ButtonState.Released) ||
                         (newKeyboardState.IsKeyDown(Keys.Escape) && oldKeyboardState.IsKeyUp(Keys.Escape)))
                     {
                         currentState = oldState;
+                        MediaPlayer.Stop();
                     }
                     break;
 
                 case GameState.Credits:
+                    if (MediaPlayer.State == MediaState.Stopped)
+                    {
+                        MediaPlayer.Play(credits);
+                    }
+
                     if ((newGamePadState.Buttons.B == ButtonState.Pressed && oldGamePadState.Buttons.B == ButtonState.Released) ||
                         (newKeyboardState.IsKeyDown(Keys.Escape) && oldKeyboardState.IsKeyUp(Keys.Escape)))
                     {
+                        MediaPlayer.Stop();
                         currentState = oldState;
                     }
                     break;
@@ -311,6 +347,8 @@ namespace inkArenaGame
                                 currentState = GameState.GameOver;
                                 players.Remove(p);
                                 players[0].position = new Vector2(1920 / 2 - 16, 1056 / 2 - 15);
+                                MediaPlayer.Play(dabSong);
+                                MediaPlayer.Pause();
                                 break;
                             }
                             p.Respawn();
@@ -328,6 +366,7 @@ namespace inkArenaGame
                     if ((newGamePadState.Buttons.Start == ButtonState.Pressed && oldGamePadState.Buttons.Start == ButtonState.Released) ||
                         (newKeyboardState.IsKeyDown(Keys.Escape) && oldKeyboardState.IsKeyUp(Keys.Escape)))
                     {
+                        MediaPlayer.Pause();
                         currentState = GameState.Paused;
                     }
                     break;
@@ -336,6 +375,7 @@ namespace inkArenaGame
                     if ((newGamePadState.Buttons.Start == ButtonState.Pressed && oldGamePadState.Buttons.Start == ButtonState.Released) ||
                         (newKeyboardState.IsKeyDown(Keys.Escape) && oldKeyboardState.IsKeyUp(Keys.Escape)))
                     {
+                        MediaPlayer.Resume();
                         currentState = GameState.Playing;
                     }
 
@@ -387,6 +427,8 @@ namespace inkArenaGame
                         (newKeyboardState.IsKeyDown(Keys.Escape) && oldKeyboardState.IsKeyUp(Keys.Escape)))
                     {
                         currentState = GameState.MainMenu;
+
+                        MediaPlayer.Stop();
                     }
 
 
@@ -436,28 +478,30 @@ namespace inkArenaGame
                     break;
 
                 case GameState.Credits:
-                    spriteBatch.Draw(credits, new Vector2(0, 0), Color.White);
+                    spriteBatch.Draw(creditsTexture, new Vector2(0, 0), Color.White);
                     break;
 
                 case GameState.Playing:
                     spriteBatch.Draw(playerTexture, new Vector2(0, 0), Color.White);
                     map.Draw();
-                    foreach (Player p in players)
-                    {
-                        p.Draw();
-                    }
-
-                    foreach (Bullet b in Bullet.All)
-                    {
-                        b.Draw(bulletTexture);
-                    }
-
+                    
                     if (countDownTimer > -0.8f)
                     {
                         spriteBatch.DrawString(countDownFont, countDownText, countDownPos, Color.White, countDownAngle, countDownOrigin, countDownScale, SpriteEffects.None, 0);
                     }
 
+
+                    foreach (Player p in players)
+                    {
+                        p.Draw();
+                    }
+
                     Particle.DrawAll();
+
+                    foreach (Bullet b in Bullet.All)
+                    {
+                        b.Draw(bulletTexture);
+                    }
 
                     break;
                 case GameState.Paused:
