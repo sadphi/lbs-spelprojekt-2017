@@ -21,12 +21,20 @@ namespace inkArenaGame
         public static Texture2D pixel;
         public static ContentManager contentLoader;
 
+        Random rnd = new Random();
+
+        public static SpriteFont font;
+
         List<Player> players;
 
         Texture2D bulletTexture;
         Texture2D playerTexture;
         Texture2D menuTexture;
+        Texture2D p1BigArm;
+        Texture2D p2BigArm;
         Texture2D credits;
+
+        Texture2D awesome;
 
         GamePadState newGamePadState;
         GamePadState oldGamePadState;
@@ -34,7 +42,8 @@ namespace inkArenaGame
         KeyboardState newKeyboardState;
         KeyboardState oldKeyboardState;
 
-        Button[] btnArray;
+        Button[] btnMainArray;
+        Button[] btnPauseArray;
 
         Map map;
 
@@ -46,6 +55,15 @@ namespace inkArenaGame
 
         int numOfPlayers;
 
+        SpriteFont countDownFont;
+        Vector2 countDownPos;
+        Vector2 countDownOrigin;
+        Vector2 countDownSize;
+        string countDownText;
+        float countDownTimer;
+        float countDownScale;
+        float countDownAngle;
+
         enum GameState
         {
             MainMenu,
@@ -55,6 +73,8 @@ namespace inkArenaGame
             Paused,
             GameOver
         }
+
+        Song dabSong;
 
         public Game1()
         {
@@ -75,11 +95,16 @@ namespace inkArenaGame
             this.Window.Title = "Hillbilly Havok";
             this.IsMouseVisible = false;
 
+            font = Game1.contentLoader.Load<SpriteFont>("Font");
+            countDownFont = Game1.contentLoader.Load<SpriteFont>("CountDownFont");
+
             this.graphics.PreferredBackBufferWidth = 1920;
             this.graphics.PreferredBackBufferHeight = 1056;
             this.graphics.IsFullScreen = false;
             this.graphics.PreferMultiSampling = true;
             this.graphics.ApplyChanges();
+
+            countDownPos = new Vector2(1920 / 2, 1056 / 2);
 
             currentState = GameState.MainMenu;
 
@@ -99,10 +124,15 @@ namespace inkArenaGame
             currentButton = 0;
             currentLevelHighlighted = 0;
 
-            btnArray = new Button[3];
-            btnArray[0] = new Button(960, 350, Content.Load<Texture2D>("Graphics/Buttons/Playbutton"), () => { currentState = GameState.LevelSelect; });
-            btnArray[1] = new Button(960, 550, Content.Load<Texture2D>("Graphics/Buttons/Creditsbutton"), () => { currentState = GameState.Credits; });
-            btnArray[2] = new Button(960, 750, Content.Load<Texture2D>("Graphics/Buttons/Quitbutton"), () => { Environment.Exit(0); });
+            btnMainArray = new Button[3];
+            btnMainArray[0] = new Button(960, 350, Content.Load<Texture2D>("Graphics/Buttons/Playbutton"), () => { currentState = GameState.LevelSelect; });
+            btnMainArray[1] = new Button(960, 550, Content.Load<Texture2D>("Graphics/Buttons/Creditsbutton"), () => { currentState = GameState.Credits; });
+            btnMainArray[2] = new Button(960, 750, Content.Load<Texture2D>("Graphics/Buttons/Quitbutton"), () => { Environment.Exit(0); });
+
+            btnPauseArray = new Button[3];
+            btnPauseArray[0] = new Button(960, 350, Content.Load<Texture2D>("Graphics/Buttons/Playbutton"), () => { currentState = GameState.Playing; });
+            btnPauseArray[1] = new Button(960, 550, Content.Load<Texture2D>("Graphics/Buttons/Creditsbutton"), () => { currentState = GameState.LevelSelect; });
+            btnPauseArray[2] = new Button(960, 750, Content.Load<Texture2D>("Graphics/Buttons/Quitbutton"), () => { currentState = GameState.MainMenu; currentButton = 0;});
 
             base.Initialize();
         }
@@ -121,9 +151,15 @@ namespace inkArenaGame
 
             // TODO: use this.Content to load your game content here
             playerTexture = Content.Load<Texture2D>("Graphics/Players/Player1Standing");
-            menuTexture = Content.Load<Texture2D>("Graphics/Menu2");
+            menuTexture = Content.Load<Texture2D>("Graphics/Menu3NoArms");
+            p1BigArm = Content.Load<Texture2D>("Graphics/MenuArm1");
+            p2BigArm = Content.Load<Texture2D>("Graphics/MenuArm2");
             bulletTexture = Content.Load<Texture2D>("Graphics/GunProjectile1");
             credits = Content.Load<Texture2D>("Graphics/credits");
+            awesome = Content.Load<Texture2D>("Graphics/AWESOME");
+
+            dabSong = Content.Load<Song>("Sounds/dabSong");
+
         }
 
         /// <summary>
@@ -148,37 +184,37 @@ namespace inkArenaGame
 
             newGamePadState = GamePad.GetState(PlayerIndex.One);
             newKeyboardState = Keyboard.GetState();
-            
+
             switch (currentState)
             {
                 case GameState.MainMenu:
-                    if ((newGamePadState.DPad.Down == ButtonState.Pressed && oldGamePadState.DPad.Down == ButtonState.Released) || 
+                    if ((newGamePadState.DPad.Down == ButtonState.Pressed && oldGamePadState.DPad.Down == ButtonState.Released) ||
                         (newKeyboardState.IsKeyDown(Keys.Down) && oldKeyboardState.IsKeyUp(Keys.Down)))
                     {
                         currentButton++;
                     }
 
-                    if ((newGamePadState.DPad.Up == ButtonState.Pressed && oldGamePadState.DPad.Up == ButtonState.Released) || 
+                    if ((newGamePadState.DPad.Up == ButtonState.Pressed && oldGamePadState.DPad.Up == ButtonState.Released) ||
                         (newKeyboardState.IsKeyDown(Keys.Up) && oldKeyboardState.IsKeyUp(Keys.Up)))
                     {
                         currentButton--;
                     }
 
-                    if (currentButton >= btnArray.Length)
+                    if (currentButton >= btnMainArray.Length)
                     {
                         currentButton = 0;
                     }
 
                     if (currentButton <= -1)
                     {
-                        currentButton = btnArray.Length - 1;
+                        currentButton = btnMainArray.Length - 1;
                     }
 
-                    if ((newGamePadState.Buttons.A == ButtonState.Pressed && oldGamePadState.Buttons.A == ButtonState.Released) || 
+                    if ((newGamePadState.Buttons.A == ButtonState.Pressed && oldGamePadState.Buttons.A == ButtonState.Released) ||
                         (newKeyboardState.IsKeyDown(Keys.Enter) && oldKeyboardState.IsKeyUp(Keys.Enter)))
                     {
                         oldState = currentState;
-                        btnArray[currentButton].act();
+                        btnMainArray[currentButton].act();
                     }
                     break;
 
@@ -195,12 +231,12 @@ namespace inkArenaGame
                         currentLevelHighlighted--;
                     }
 
-                    if (currentLevelHighlighted >= Map.levelTextures.Count())
+                    if (currentLevelHighlighted > Map.levelTextures.Count() - 1)
                     {
                         currentLevelHighlighted = 0;
                     }
 
-                    if (currentButton <= -1)
+                    if (currentLevelHighlighted < 0)
                     {
                         currentLevelHighlighted = Map.levelTextures.Count() - 1;
                     }
@@ -209,16 +245,25 @@ namespace inkArenaGame
                         (newKeyboardState.IsKeyDown(Keys.Enter) && oldKeyboardState.IsKeyUp(Keys.Enter)))
                     {
                         Map.ChangeLevel(currentLevelHighlighted);
+                        countDownTimer = 3;
+                        countDownScale = 1;
+                        countDownAngle = 0;
+                        countDownText = countDownTimer + "!";
+                        countDownSize = countDownFont.MeasureString(countDownText);
+                        countDownOrigin = countDownSize / 2;
                         oldState = currentState;
                         currentState = GameState.Playing;
-                        players.Add(new Player((PlayerIndex)2, 980));
+                        players.Clear();
+                        //players.Add(new Player((PlayerIndex)2, 980));
                         for (int i = 0; i < numOfPlayers; i++)
                         {
                             players.Add(new Player((PlayerIndex)i, 100 + i * 1720));
                         }
+                        MediaPlayer.Play(dabSong);
+                        MediaPlayer.Pause();
                     }
 
-                    if ((newGamePadState.Buttons.Back == ButtonState.Pressed && oldGamePadState.Buttons.Back == ButtonState.Released) ||
+                    if ((newGamePadState.Buttons.B == ButtonState.Pressed && oldGamePadState.Buttons.B == ButtonState.Released) ||
                         (newKeyboardState.IsKeyDown(Keys.Escape) && oldKeyboardState.IsKeyUp(Keys.Escape)))
                     {
                         currentState = oldState;
@@ -226,7 +271,7 @@ namespace inkArenaGame
                     break;
 
                 case GameState.Credits:
-                    if ((newGamePadState.Buttons.Back == ButtonState.Pressed && oldGamePadState.Buttons.Back == ButtonState.Released) ||
+                    if ((newGamePadState.Buttons.B == ButtonState.Pressed && oldGamePadState.Buttons.B == ButtonState.Released) ||
                         (newKeyboardState.IsKeyDown(Keys.Escape) && oldKeyboardState.IsKeyUp(Keys.Escape)))
                     {
                         currentState = oldState;
@@ -234,13 +279,26 @@ namespace inkArenaGame
                     break;
 
                 case GameState.Playing:
+                    if (countDownTimer >= -0.8)
+                    {
+                        countDownTimer -= 0.02f;
+                        countDownText = (int)Math.Ceiling(countDownTimer) + "!";
+                        if (countDownTimer < 0) countDownText = "FIGHT";
+                        countDownSize = countDownFont.MeasureString(countDownText);
+                        countDownOrigin = countDownSize / 2;
+
+                        countDownScale = 1.25f + (float)Math.Sin(countDownTimer * 6) * 0.5f;
+                        countDownAngle = (float)Math.Sin(countDownTimer * 3f) * 0.3f;
+                    }
+
                     bool hit = false;
 
                     foreach (Bullet b in Bullet.All.ToArray())
                         b.Update();
 
-                    foreach (Player p in players)
-                        p.Update(ref hit);
+                    if (countDownTimer <= 0)
+                        foreach (Player p in players)
+                            p.Update(ref hit);
 
                     if (hit)
                     {
@@ -248,22 +306,26 @@ namespace inkArenaGame
                         int i = 0;
                         foreach (Player p in players.ToList())
                         {
-                            p.state = Player.State.dabing;
-                            
-
                             if (p.lives == 0)
                             {
                                 currentState = GameState.GameOver;
-                                players[1 - i].state = Player.State.dabing;
                                 players.Remove(p);
+                                players[0].position = new Vector2(1920 / 2 - 16, 1056 / 2 - 15);
                                 break;
                             }
                             p.Respawn();
                             i++;
                         }
+
+                        countDownTimer = 3;
+                        countDownScale = 1;
+                        countDownAngle = 0;
+                        countDownText = "3!";
+                        countDownSize = countDownFont.MeasureString(countDownText);
+                        countDownOrigin = countDownSize / 2;
                     }
 
-                    if ((newGamePadState.Buttons.Back == ButtonState.Pressed && oldGamePadState.Buttons.Back == ButtonState.Released) ||
+                    if ((newGamePadState.Buttons.Start == ButtonState.Pressed && oldGamePadState.Buttons.Start == ButtonState.Released) ||
                         (newKeyboardState.IsKeyDown(Keys.Escape) && oldKeyboardState.IsKeyUp(Keys.Escape)))
                     {
                         currentState = GameState.Paused;
@@ -271,16 +333,64 @@ namespace inkArenaGame
                     break;
 
                 case GameState.Paused:
-                    if ((newGamePadState.Buttons.Back == ButtonState.Pressed && oldGamePadState.Buttons.Back == ButtonState.Released) ||
+                    if ((newGamePadState.Buttons.Start == ButtonState.Pressed && oldGamePadState.Buttons.Start == ButtonState.Released) ||
                         (newKeyboardState.IsKeyDown(Keys.Escape) && oldKeyboardState.IsKeyUp(Keys.Escape)))
                     {
                         currentState = GameState.Playing;
                     }
-                    break;
 
+                    if ((newGamePadState.DPad.Down == ButtonState.Pressed && oldGamePadState.DPad.Down == ButtonState.Released) ||
+                       (newKeyboardState.IsKeyDown(Keys.Down) && oldKeyboardState.IsKeyUp(Keys.Down)))
+                    {
+                        currentButton++;
+                    }
+
+                    if ((newGamePadState.DPad.Up == ButtonState.Pressed && oldGamePadState.DPad.Up == ButtonState.Released) ||
+                        (newKeyboardState.IsKeyDown(Keys.Up) && oldKeyboardState.IsKeyUp(Keys.Up)))
+                    {
+                        currentButton--;
+                    }
+
+                    if (currentButton >= btnPauseArray.Length)
+                    {
+                        currentButton = 0;
+                    }
+
+                    if (currentButton <= -1)
+                    {
+                        currentButton = btnPauseArray.Length - 1;
+                    }
+
+                    if ((newGamePadState.Buttons.A == ButtonState.Pressed && oldGamePadState.Buttons.A == ButtonState.Released) ||
+                        (newKeyboardState.IsKeyDown(Keys.Enter) && oldKeyboardState.IsKeyUp(Keys.Enter)))
+                    {
+                        oldState = GameState.MainMenu;
+                        btnPauseArray[currentButton].act();
+                    }
+
+                    break;
                 case GameState.GameOver:
-                    break;
 
+                    players[0].DabState();
+
+                    if (players[0].state == Player.State.dabing)
+                    {
+                        if (MediaPlayer.State != MediaState.Playing)
+                            MediaPlayer.Resume();
+                    }
+                    else
+                    {
+                        MediaPlayer.Pause();
+                    }
+
+                    if ((newGamePadState.Buttons.B == ButtonState.Pressed && oldGamePadState.Buttons.B == ButtonState.Released) ||
+                        (newKeyboardState.IsKeyDown(Keys.Escape) && oldKeyboardState.IsKeyUp(Keys.Escape)))
+                    {
+                        currentState = GameState.MainMenu;
+                    }
+
+
+                    break;
                 default:
                     break;
             }
@@ -306,15 +416,23 @@ namespace inkArenaGame
             {
                 case GameState.MainMenu:
                     spriteBatch.Draw(menuTexture, new Vector2(0, 0), Color.White);
-                    for (int i = 0; i < btnArray.Length; i++)
+                    for (int i = 0; i < btnMainArray.Length; i++)
                     {
-                        btnArray[i].Draw(Color.White);
+                        btnMainArray[i].Draw(Color.White);
                     }
 
-                    btnArray[currentButton].Draw(new Color(255, 255, 255, 100));
+                    btnMainArray[currentButton].Draw(new Color(255, 255, 255, 100));
+
+                    Vector2 arm1Pos = new Vector2(140, 508);
+                    Vector2 arm1Origin = new Vector2(60, 76);
+                    Vector2 buttonPos = new Vector2(btnMainArray[currentButton].buttonX + btnMainArray[currentButton].texture.Width / 2, btnMainArray[currentButton].buttonY + btnMainArray[currentButton].texture.Height / 2);
+                    float angle1 = (float)Math.Atan2(buttonPos.Y - arm1Pos.Y, buttonPos.X - arm1Pos.X);
+                    float angle2 = (float)Math.Atan2(buttonPos.Y - arm1Pos.Y, -buttonPos.X - arm1Pos.X);
+                    spriteBatch.Draw(p1BigArm, arm1Pos, null, Color.White, angle1, arm1Origin, 1, SpriteEffects.None, 0);
+                    spriteBatch.Draw(p2BigArm, new Vector2(1920 - arm1Pos.X, arm1Pos.Y), null, Color.White, -angle1, new Vector2(p1BigArm.Width - arm1Origin.X, arm1Origin.Y), 1, SpriteEffects.FlipHorizontally, 0);
                     break;
                 case GameState.LevelSelect:
-
+                    spriteBatch.Draw(Map.levelTextures[currentLevelHighlighted], new Vector2(1920 / 2, 1056 / 2), null, Color.White, 0, new Vector2(Map.levelTextures[currentLevelHighlighted].Width / 2, Map.levelTextures[currentLevelHighlighted].Height / 2), 0.8f, SpriteEffects.None, 0);
                     break;
 
                 case GameState.Credits:
@@ -334,9 +452,14 @@ namespace inkArenaGame
                         b.Draw(bulletTexture);
                     }
 
-                    Particle.DrawAll();
-                    break;
+                    if (countDownTimer > -0.8f)
+                    {
+                        spriteBatch.DrawString(countDownFont, countDownText, countDownPos, Color.White, countDownAngle, countDownOrigin, countDownScale, SpriteEffects.None, 0);
+                    }
 
+                    Particle.DrawAll();
+
+                    break;
                 case GameState.Paused:
                     spriteBatch.Draw(playerTexture, new Vector2(0, 0), Color.White);
                     map.Draw();
@@ -352,17 +475,49 @@ namespace inkArenaGame
 
                     Particle.DrawAll();
 
-                    spriteBatch.Draw(btnArray[0].texture, Vector2.Zero, Color.White);
+                    spriteBatch.Draw(pixel, new Rectangle(0, 0, 1920, 1056), new Color(0f, 0f, 0f, 0.5f));
+                    for (int i = 0; i < btnPauseArray.Length; i++)
+                    {
+                        btnPauseArray[i].Draw(Color.White);
+                    }
+
+                    btnPauseArray[currentButton].Draw(new Color(255, 255, 255, 100));
                     break;
 
                 case GameState.GameOver:
+                    spriteBatch.End();
+
+                    int isDab = (players[0].state == Player.State.dabing ? 1 : 0);
+
+                    float zoom = 4 + (float)(rnd.NextDouble() - 0.5) * isDab;
+                    Vector2 offSet = new Vector2((float)rnd.NextDouble() * 2 - 1, (float)rnd.NextDouble() * 2 - 1) * 3 * isDab;
+
+                    Matrix _transform = Matrix.CreateTranslation(new Vector3(-players[0].position.X - 16 + offSet.X, -players[0].position.Y + offSet.Y, 0)) *
+                                                    Matrix.CreateRotationZ((float)Math.Sin(gameTime.TotalGameTime.TotalMilliseconds) * 0.05f * isDab) *
+                                                    Matrix.CreateScale(new Vector3(zoom, zoom, 1)) *
+                                                    Matrix.CreateTranslation(new Vector3(1920 * 0.5f, 1056 * 0.5f, 0));
+
+
+                    spriteBatch.Begin(SpriteSortMode.Immediate,
+                        BlendState.AlphaBlend,
+                        SamplerState.PointClamp,
+                        null,
+                        null,
+                        null, _transform);
+
                     map.Draw();
+
                     foreach (Player p in players)
                     {
                         p.Draw();
                     }
-                    break;
 
+                    string text = "Player " + ((int)players[0].index + 1) + " won!";
+                    string dabText = "Press Y to DAB";
+                    spriteBatch.DrawString(countDownFont, text, new Vector2(players[0].position.X + 16, players[0].position.Y - 100), Color.White, 0, new Vector2(countDownFont.MeasureString(text).X / 2, 0), 0.2f, SpriteEffects.None, 0);
+                    spriteBatch.DrawString(countDownFont, dabText, new Vector2(players[0].position.X + 16, players[0].position.Y - 50), Color.White, 0, new Vector2(countDownFont.MeasureString(dabText).X / 2, 0), 0.1f, SpriteEffects.None, 0);
+                    
+                    break;
                 default:
                     break;
             }

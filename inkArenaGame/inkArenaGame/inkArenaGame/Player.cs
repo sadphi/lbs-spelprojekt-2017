@@ -8,13 +8,11 @@ namespace inkArenaGame
 {
     class Player
     {
-        static SpriteFont font = Game1.contentLoader.Load<SpriteFont>("Font");
-
         Vector2 spawnPos;
-        Vector2 position;
+        public Vector2 position;
         Vector2 velocity;
 
-        PlayerIndex index;
+        public PlayerIndex index;
         GamePadState newstate;
         GamePadState oldstate;
 
@@ -44,6 +42,7 @@ namespace inkArenaGame
         public int lives;
 
         public float timer = 1.0f;
+        Random rnd = new Random();
 
         public enum State
         {
@@ -56,10 +55,10 @@ namespace inkArenaGame
         public Player(PlayerIndex playerIndex, int nx)
         {
             index = playerIndex;
-            position = new Vector2(nx, 200);
+            position = new Vector2(nx, 300);
             spawnPos = position;
             velocity = new Vector2(0, 0);
-            lives = 3;
+            lives = 1;
             LoadContent();
         }
 
@@ -224,11 +223,23 @@ namespace inkArenaGame
 
             #endregion
 
+            oldstate = newstate;
+        }
+
+        public void DabState()
+        {
+            newstate = GamePad.GetState(index, GamePadDeadZone.Circular);
+
             if (newstate.Buttons.Y == ButtonState.Pressed)
             {
                 state = State.dabing;
+                if (oldstate.Buttons.Y == ButtonState.Released) flipFrame = rnd.Next(0, 4) == 0 ? (flipFrame = !flipFrame) : flipFrame;
             }
-
+            else
+            {
+                state = State.standing;
+                angle = flipFrame ? -(float)Math.PI : 0;
+            }
             oldstate = newstate;
         }
 
@@ -321,15 +332,15 @@ namespace inkArenaGame
             }
             #endregion
 
-            string text = "Player: " + ((int)index + 1);
-            Game1.spriteBatch.DrawString(font, text, new Vector2(position.X + WIDTH / 2 - font.MeasureString(text).X / 2, position.Y - 24), new Color(timer, timer, timer, timer));
+            string text = "Player " + ((int)index + 1);
+            Game1.spriteBatch.DrawString(Game1.font, text, new Vector2(position.X + WIDTH / 2 - Game1.font.MeasureString(text).X / 2, position.Y - 24), new Color(timer, timer, timer, timer));
 
             Game1.spriteBatch.Draw(state == 0 ? standing : (state == (State)1 ? runing : (state == (State)2 ? jumping : dabing)), new Rectangle((int)position.X, (int)position.Y, state == State.dabing ? dabing.Width : WIDTH, HEIGHT), new Rectangle(32 * (currentFrame % 6), 0, state == State.dabing ? dabing.Width : 32, 64), Color.White, 0, Vector2.Zero, flipFrame ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
 
             int armXOffset = 7 * (WIDTH / 32) + (flipFrame ? 18 * (WIDTH / 32) : 0);
 
             if (state != State.dabing) Game1.spriteBatch.Draw(arm, new Vector2(position.X + armXOffset, position.Y + 18 * (WIDTH / 32)), null, Color.White, angle, new Vector2(3, 5), 1, flipFrame ? SpriteEffects.FlipVertically : SpriteEffects.None, 0);
-            if (timer > 0) timer -= 0.002f;
+            if (timer > 0) timer -= 0.005f;
         }
     }
 }

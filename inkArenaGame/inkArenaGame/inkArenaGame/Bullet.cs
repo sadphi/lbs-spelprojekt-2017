@@ -46,10 +46,17 @@ namespace inkArenaGame
                 position += velNorm;
             }
 
-            if (position.X > 1920 || position.X < 0 || position.Y > 1054 || position.Y < 0)
-            {
-                Bullet.All.Remove(this);
-            }
+           
+
+            if (position.X > 1920)
+                position.X = 0;
+            if (position.X < 0)
+                position.X = 1920;
+            if (position.Y > 1056)
+                position.Y = 0;
+            if (position.Y < 0)
+                position.Y = 1056;
+
         }
 
         public void Draw(Texture2D bullet)
